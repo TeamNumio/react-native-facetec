@@ -33,8 +33,8 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
 
   public PhotoIDMatchProcessor(String id, final Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
         // For demonstration purposes, generate a new uuid for each Photo ID Match.  Enroll this in the DB and compare against the ID after it is scanned.
-        ZoomGlobalState.randomUsername = "android_sample_app_" + randomUUID();
-        ZoomGlobalState.isRandomUsernameEnrolled = false;
+        Config.randomUsername = "android_sample_app_" + randomUUID();
+        Config.isRandomUsernameEnrolled = false;
         this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
         this.sessionTokenErrorCallback = sessionTokenErrorCallback;
         this.id = id;

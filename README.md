@@ -64,8 +64,8 @@ CheckId(
 minSdkVersion = 19
 
 ```java
-//Add your SDK key to ZoomGlobalState.java
-public static String DeviceLicenseKeyIdentifier = "YOUR_API_KEY";
+//Add your SDK key to Config.java
+public static String DeviceKeyIdentifier = "YOUR_API_KEY";
 ```
 
 ## Contributing

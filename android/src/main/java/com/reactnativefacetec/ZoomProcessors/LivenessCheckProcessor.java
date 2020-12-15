@@ -1,84 +1,186 @@
-// Demonstrates performing a Liveness Check.
-
-// The FaceTec Device SDKs will cancel from the Progress Screen if onProgress() is not called for
-// 60 seconds. This provides a failsafe for users getting stuck in the process because of a networking
-// issue. If you would like to force users to stay on the Progress Screen for longer than 60 seconds,
-// you can write code in the FaceScan or ID Scan Processor to call onProgress() via your own custom logic.
+//
+// Welcome to the annotated FaceTec Device SDK core code for performing secure Liveness Checks!
+//
 package com.reactnativefacetec.ZoomProcessors;
 
 import android.content.Context;
-
-import com.facetec.sdk.FaceTecCustomization;
-import com.facetec.sdk.FaceTecFaceScanProcessor;
-import com.facetec.sdk.FaceTecFaceScanResultCallback;
-import com.facetec.sdk.FaceTecSessionActivity;
-import com.facetec.sdk.FaceTecSessionResult;
-import com.facetec.sdk.FaceTecSessionStatus;
-
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.IOException;
 
+import com.facetec.sdk.*;
+
+// This is an example self-contained class to perform Liveness Checks with the FaceTec SDK.
+// You may choose to further componentize parts of this in your own Apps based on your specific requirements.
+
+// Android Note 1:  Some commented "Parts" below are out of order so that they can match iOS and Browser source for this same file on those platforms.
+// Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class LivenessCheckProcessor extends Processor implements FaceTecFaceScanProcessor {
-    FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
-    FaceTecSessionResult latestFaceTecSessionResult;
-    SessionTokenSuccessCallback sessionTokenSuccessCallback;
-    private boolean _isSuccess = false;
+  private boolean isSuccess = false;
+  FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
+  FaceTecSessionResult latestFaceTecSessionResult;
+  SessionTokenSuccessCallback sessionTokenSuccessCallback;
 
-    public LivenessCheckProcessor(final Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
-        this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
-        NetworkingHelpers.getSessionToken(new NetworkingHelpers.SessionTokenCallback() {
-            @Override
-            public void onResponse(String sessionToken) {
-                // Launch the ZoOm Session.
-                FaceTecSessionActivity.createAndLaunchSession(context, LivenessCheckProcessor.this, sessionToken);
-            }
+  public LivenessCheckProcessor(final Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
+    this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
 
-            @Override
-            public void onError() {
-                sessionTokenErrorCallback.onError("LivenessCheckProcessor");
-            }
-        });
+    //
+    // Part 1:  Starting the FaceTec Session
+    //
+    // Required parameters:
+    // - Context:  Unique for Android, a Context is passed in, which is required for the final onActivityResult function after the FaceTec SDK is done.
+    // - FaceTecFaceScanProcessor:  A class that implements FaceTecFaceScanProcessor, which handles the FaceScan when the User completes a Session.  In this example, "self" implements the class.
+    // - sessionToken:  A valid Session Token you just created by calling your API to get a Session Token from the Server SDK.
+    //
+    NetworkingHelpers.getSessionToken(new NetworkingHelpers.SessionTokenCallback() {
+      @Override
+      public void onResponse(String sessionToken) {
+        // Launch the ZoOm Session.
+        FaceTecSessionActivity.createAndLaunchSession(context, com.reactnativefacetec.ZoomProcessors.LivenessCheckProcessor.this, sessionToken);
+      }
+
+      @Override
+      public void onError() {
+        sessionTokenErrorCallback.onError("LivenessCheckProcessor");
+      }
+    });
+  }
+
+  //
+  // Part 2:  Handling the Result of a FaceScan
+  //
+  public void processSessionWhileFaceTecSDKWaits(final FaceTecSessionResult sessionResult, final FaceTecFaceScanResultCallback faceScanResultCallback) {
+
+    //
+    // Part 3:  Handles early exit scenarios where there is no FaceScan to handle -- i.e. User Cancellation, Timeouts, etc.
+    //
+    if(sessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
+      NetworkingHelpers.cancelPendingRequests();
+      faceScanResultCallback.cancel();
+      return;
     }
 
-    public boolean isSuccess() {
-        return _isSuccess;
+    // IMPORTANT:  FaceTecSDK.FaceTecSessionStatus.SessionCompletedSuccessfully DOES NOT mean the Liveness Check was Successful.
+    // It simply means the User completed the Session and a 3D FaceScan was created.  You still need to perform the Liveness Check on your Servers.
+
+    //
+    // Part 4:  Get essential data off the FaceTecSessionResult
+    //
+    JSONObject parameters = new JSONObject();
+    try {
+      parameters.put("faceScan", sessionResult.getFaceScanBase64());
+      parameters.put("auditTrailImage", sessionResult.getAuditTrailCompressedBase64()[0]);
+      parameters.put("lowQualityAuditTrailImage", sessionResult.getLowQualityAuditTrailCompressedBase64()[0]);
+    }
+    catch(JSONException e) {
+      e.printStackTrace();
+      Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to create JSON payload for upload.");
     }
 
-    // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processSessionWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback) {
-        this.latestFaceTecSessionResult = zoomSessionResult;
-        this.FaceTecFaceScanResultCallback = FaceTecFaceScanResultCallback;
+    //
+    // Part 5:  Make the Networking Call to Your Servers.  Below is just example code, you are free to customize based on how your own API works.
+    //
+    okhttp3.Request request = new okhttp3.Request.Builder()
+      .url(Config.BaseURL + "/liveness-3d")
+      .header("Content-Type", "application/json")
+      .header("X-Device-Key", Config.DeviceKeyIdentifier)
+      .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(sessionResult.getSessionId()))
 
-        // Cancel last request in flight.  This handles case where processing is is taking place but cancellation or Context Switch occurs.
-        // Our handling here ends the latest in flight request and simply re-does the normal logic, which will cancel out.
-        NetworkingHelpers.cancelPendingRequests();
+      //
+      // Part 7:  Demonstrates updating the Progress Bar based on the progress event.
+      //
+      .post(new ProgressRequestBody(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), parameters.toString()),
+        new ProgressRequestBody.Listener() {
+          @Override
+          public void onUploadProgressChanged(long bytesWritten, long totalBytes) {
+            final float uploadProgressPercent = ((float)bytesWritten) / ((float)totalBytes);
+            faceScanResultCallback.uploadProgress(uploadProgressPercent);
+          }
+        }))
+      .build();
 
-        // cancellation, timeout, etc.
-        if (zoomSessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
-            FaceTecFaceScanResultCallback.cancel();
-            this.FaceTecFaceScanResultCallback = null;
-            return;
+    //
+    // Part 8:  Actually send the request.
+    //
+    NetworkingHelpers.getApiClient().newCall(request).enqueue(new Callback() {
+      @Override
+      public void onResponse(Call call, okhttp3.Response response) throws IOException {
+        //
+        // Part 6:  In our Sample, we evaluate a boolean response and treat true as success, false as "User Needs to Retry",
+        // and handle all other non-nominal responses by cancelling out.  You may have different paradigms in your own API and are free to customize based on these.
+        //
+        String responseString = response.body().string();
+        response.body().close();
+        try {
+          JSONObject responseJSON = new JSONObject(responseString);
+
+          //
+          // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
+          // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
+          //
+          sampleAppActivity.setLatestServerResult(responseJSON);
+
+          boolean didSucceed = responseJSON.getBoolean("success");
+
+          if (didSucceed == true) {
+            // CASE:  Success!  The Liveness Check was performed and the User Proved Liveness.
+
+            //
+            // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
+            // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
+            //
+            isSuccess = true;
+
+            FaceTecCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
+            faceScanResultCallback.succeed();
+          }
+          else if (didSucceed == false) {
+            // CASE:  In our Sample code, "success" being present and false means that the User Needs to Retry.
+            // Real Users will likely succeed on subsequent attempts after following on-screen guidance.
+            // Attackers/Fraudsters will continue to get rejected.
+            faceScanResultCallback.retry();
+          }
+          else {
+            // CASE:  UNEXPECTED response from API.  Our Sample Code keys of a success boolean on the root of the JSON object --> You define your own API contracts with yourself and may choose to do something different here based on the error.
+            faceScanResultCallback.cancel();
+          }
         }
+        catch(JSONException e) {
+          // CASE:  Parsing the response into JSON failed --> You define your own API contracts with yourself and may choose to do something different here based on the error.  Solid server-side code should ensure you don't get to this case.
+          e.printStackTrace();
+          Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to parse JSON result.");
+          faceScanResultCallback.cancel();
+        }
+      }
 
-        // Create and parse request to ZoOm Server.
-        NetworkingHelpers.getLivenessCheckResponseFromZoomServer(zoomSessionResult, this.FaceTecFaceScanResultCallback, new FaceTecManagedAPICallback() {
-            @Override
-            public void onResponse(JSONObject responseJSON) {
-                UXNextStep nextStep = ServerResultHelpers.getLivenessNextStep(responseJSON);
+      @Override
+      public void onFailure(Call call, IOException e) {
+        // CASE:  Network Request itself is erroring --> You define your own API contracts with yourself and may choose to do something different here based on the error.
+        Log.d("FaceTecSDKSampleApp", "Exception raised while attempting HTTPS call.");
+        faceScanResultCallback.cancel();
+      }
+    });
 
-                if (nextStep == UXNextStep.Succeed) {
-                    _isSuccess = true;
-                    sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
-                    FaceTecCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
-                    FaceTecFaceScanResultCallback.succeed();
-                }
-                else if (nextStep == UXNextStep.Retry) {
-                    FaceTecFaceScanResultCallback.retry();
-                }
-                else {
-                    FaceTecFaceScanResultCallback.cancel();
-                }
-            }
-        });
+    //
+    // Part 9:  For better UX, update the User if the upload is taking a while.  You are free to customize and enhance this behavior to your liking.
+    //
+    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        if(faceScanResultCallback == null) { return; }
+        faceScanResultCallback.uploadMessageOverride("Still Uploading...");
+      }
+    }, 6000);
+  }
 
-    }
+  public boolean isSuccess() {
+    return this.isSuccess;
+  }
 }

@@ -30,7 +30,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
     public EnrollmentProcessor(String id, final Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
         // For demonstration purposes, generate a new uuid for each user and flag as successful in onZoomSessionComplete.  Reset enrollment status each enrollment attempt.
        this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
-        ZoomGlobalState.randomUsername = id;
+        Config.randomUsername = id;
         NetworkingHelpers.getSessionToken(new NetworkingHelpers.SessionTokenCallback() {
             @Override
             public void onResponse(String sessionToken) {
@@ -82,7 +82,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
                   }
                   Log.i("responseJSON", "responseJSON == "+ responseJSON.toString());
                     FaceTecCustomization.overrideResultScreenSuccessMessage = "Enrollment\nSuccessful";
-//                    ZoomGlobalState.isRandomUsernameEnrolled = true;
+//                    Config.isRandomUsernameEnrolled = true;
                     FaceTecFaceScanResultCallback.succeed();
                 }
                 else if (nextStep == UXNextStep.Retry) {

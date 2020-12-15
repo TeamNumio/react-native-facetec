@@ -94,9 +94,9 @@ public class NetworkingHelpers {
     public static void getSessionToken(final SessionTokenCallback sessionTokenCallback) {
         // Do the network call and handle result
         okhttp3.Request request = new okhttp3.Request.Builder()
-                .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
+                .header("X-Device-License-Key", Config.DeviceKeyIdentifier)
                 .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(""))
-                .url(ZoomGlobalState.ZoomServerBaseURL + "/session-token")
+                .url(Config.BaseURL + "/session-token")
                 .get()
                 .build();
 
@@ -224,7 +224,7 @@ public class NetworkingHelpers {
     public static void getLivenessCheckResponseFromZoomServer(FaceTecSessionResult zoomSessionResult, FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getCommonParameters(zoomSessionResult);
         callToZoomServerForResult(
-                ZoomGlobalState.ZoomServerBaseURL + "/liveness",
+                Config.BaseURL + "/liveness",
                 parameters,
                 zoomSessionResult,
                 FaceTecFaceScanResultCallback,
@@ -236,13 +236,13 @@ public class NetworkingHelpers {
     public static void getEnrollmentResponseFromZoomServer(FaceTecSessionResult zoomSessionResult, FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getCommonParameters(zoomSessionResult);
         try {
-            parameters.put("enrollmentIdentifier", ZoomGlobalState.randomUsername);
+            parameters.put("enrollmentIdentifier", Config.randomUsername);
         }
         catch(JSONException e) {
             e.printStackTrace();
         }
         callToZoomServerForResult(
-                ZoomGlobalState.ZoomServerBaseURL + "/enrollment",
+                Config.BaseURL + "/enrollment",
                 parameters,
                 zoomSessionResult,
                 FaceTecFaceScanResultCallback,
@@ -254,7 +254,7 @@ public class NetworkingHelpers {
     public static void getAuthenticateResponseFromZoomServer(String id, FaceTecSessionResult zoomSessionResult, FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getAuthenticateParameters(id, zoomSessionResult);
         callToZoomServerForResult(
-                ZoomGlobalState.ZoomServerBaseURL + "/match-3d-3d",
+                Config.BaseURL + "/match-3d-3d",
                 parameters,
                 zoomSessionResult,
                 FaceTecFaceScanResultCallback,
@@ -266,7 +266,7 @@ public class NetworkingHelpers {
     public static void getPhotoIDMatchResponseFromZoomServer(String id, FaceTecIDScanResult zoomIDScanResult, FaceTecIDScanResultCallback zoomIDScanResultCallback, FaceTecManagedAPICallback resultCallback ){
         JSONObject parameters = getPhotoIDParameters(id, zoomIDScanResult);
         callFaceTecManagedAPIForIDCheck(
-                ZoomGlobalState.ZoomServerBaseURL + "/id-check",
+                Config.BaseURL + "/id-check",
                 parameters,
                 zoomIDScanResult,
                 zoomIDScanResultCallback,
@@ -297,7 +297,7 @@ public class NetworkingHelpers {
         // Do the network call and handle result
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .header("Content-Type", "application/json")
-                .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
+                .header("X-Device-License-Key", Config.DeviceKeyIdentifier)
                 .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(zoomSessionResult.getSessionId()))
                 .url(endpoint)
                 .post(progressRequestBody)
@@ -366,7 +366,7 @@ public class NetworkingHelpers {
         // Do the network call and handle result
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .header("Content-Type", "application/json")
-                .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
+                .header("X-Device-License-Key", Config.DeviceKeyIdentifier)
                 .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(sessionId))
                 .url(endpoint)
                 .post(progressRequestBody)

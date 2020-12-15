@@ -18,10 +18,10 @@ public class ThemeHelpers {
   }
 
   public void setAppTheme(String theme) {
-        ZoomGlobalState.currentCustomization = getCustomizationForTheme(theme);
+        Config.currentCustomization = getCustomizationForTheme(theme);
         FaceTecCustomization currentLowLightCustomization = getLowLightCustomizationForTheme(theme);
 
-        FaceTecSDK.setCustomization(ZoomGlobalState.currentCustomization);
+        FaceTecSDK.setCustomization(Config.currentCustomization);
         FaceTecSDK.setLowLightCustomization(currentLowLightCustomization);
     }
 

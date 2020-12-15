@@ -162,5 +162,6 @@ public class Config {
     public static boolean wasSDKConfiguredWithConfigWizard = true;
 
     public static String randomUsername = "";
+    public static boolean isRandomUsernameEnrolled = false;
 
 }
