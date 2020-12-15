@@ -46,7 +46,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processSessionResultWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback) {
+    public void processSessionWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback) {
         this.latestFaceTecSessionResult = zoomSessionResult;
         this.FaceTecFaceScanResultCallback = FaceTecFaceScanResultCallback;
 
