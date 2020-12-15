@@ -9,7 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.facetec.sdk.ZoomFaceScanResultCallback;
+import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.FaceTecIDScanResult;
 import com.facetec.sdk.FaceTecIDScanResultCallback;
 import com.facetec.sdk.FaceTecSDK;
@@ -221,19 +221,19 @@ public class NetworkingHelpers {
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getLivenessCheckResponseFromZoomServer(FaceTecSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getLivenessCheckResponseFromZoomServer(FaceTecSessionResult zoomSessionResult, FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getCommonParameters(zoomSessionResult);
         callToZoomServerForResult(
                 ZoomGlobalState.ZoomServerBaseURL + "/liveness",
                 parameters,
                 zoomSessionResult,
-                ZoomFaceScanResultCallback,
+                FaceTecFaceScanResultCallback,
                 resultCallback
         );
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getEnrollmentResponseFromZoomServer(FaceTecSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getEnrollmentResponseFromZoomServer(FaceTecSessionResult zoomSessionResult, FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getCommonParameters(zoomSessionResult);
         try {
             parameters.put("enrollmentIdentifier", ZoomGlobalState.randomUsername);
@@ -245,19 +245,19 @@ public class NetworkingHelpers {
                 ZoomGlobalState.ZoomServerBaseURL + "/enrollment",
                 parameters,
                 zoomSessionResult,
-                ZoomFaceScanResultCallback,
+                FaceTecFaceScanResultCallback,
                 resultCallback
         );
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getAuthenticateResponseFromZoomServer(String id, FaceTecSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getAuthenticateResponseFromZoomServer(String id, FaceTecSessionResult zoomSessionResult, FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getAuthenticateParameters(id, zoomSessionResult);
         callToZoomServerForResult(
                 ZoomGlobalState.ZoomServerBaseURL + "/match-3d-3d",
                 parameters,
                 zoomSessionResult,
-                ZoomFaceScanResultCallback,
+                FaceTecFaceScanResultCallback,
                 resultCallback
         );
     }
@@ -284,14 +284,14 @@ public class NetworkingHelpers {
     // Makes the actual call to the API.
     // Note that for initial integration this sends to the FaceTec Managed Testing API.
     // After deployment of your own instance of ZoOm Server, this will be your own configurable endpoint.
-    private static void callToZoomServerForResult(String endpoint, JSONObject parameters, FaceTecSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback, final FaceTecManagedAPICallback resultCallback)  {
+    private static void callToZoomServerForResult(String endpoint, JSONObject parameters, FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback, final FaceTecManagedAPICallback resultCallback)  {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), parameters.toString());
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody,
                 new ProgressRequestBody.Listener() {
                     @Override
                     public void onUploadProgressChanged(long bytesWritten, long totalBytes) {
                         final float uploadProgressPercent = ((float)bytesWritten) / ((float)totalBytes);
-                        ZoomFaceScanResultCallback.uploadProgress(uploadProgressPercent);
+                        FaceTecFaceScanResultCallback.uploadProgress(uploadProgressPercent);
                     }
                 });
         // Do the network call and handle result
@@ -312,7 +312,7 @@ public class NetworkingHelpers {
 
                 // If this comes from HTTPS cancel call, don't set the sub code to NETWORK_ERROR.
                 if(!e.getMessage().equals(OK_HTTP_RESPONSE_CANCELED)) {
-                    ZoomFaceScanResultCallback.cancel();
+                    FaceTecFaceScanResultCallback.cancel();
                 }
             }
 
@@ -328,7 +328,7 @@ public class NetworkingHelpers {
                 catch(JSONException e) {
                     e.printStackTrace();
                     Log.d("FaceTecSDK", "Exception raised while attempting to parse JSON result.");
-                    ZoomFaceScanResultCallback.cancel();
+                    FaceTecFaceScanResultCallback.cancel();
                 }
             }
         });
@@ -339,10 +339,10 @@ public class NetworkingHelpers {
         longUploadHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(ZoomFaceScanResultCallback == null || !requestInProgress) {
+                if(FaceTecFaceScanResultCallback == null || !requestInProgress) {
                     return;
                 }
-                ZoomFaceScanResultCallback.uploadMessageOverride("Still Uploading...");
+                FaceTecFaceScanResultCallback.uploadMessageOverride("Still Uploading...");
             }
         }, 6000);
 

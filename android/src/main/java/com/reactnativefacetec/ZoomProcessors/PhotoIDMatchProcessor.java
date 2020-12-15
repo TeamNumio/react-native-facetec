@@ -12,7 +12,7 @@ import android.util.Log;
 import com.facetec.sdk.FaceTecIDScanStatus;
 import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.ZoomFaceScanProcessor;
-import com.facetec.sdk.ZoomFaceScanResultCallback;
+import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.ZoomIDScanProcessor;
 import com.facetec.sdk.FaceTecIDScanResult;
 import com.facetec.sdk.FaceTecIDScanResultCallback;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import static java.util.UUID.randomUUID;
 
 public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProcessor, ZoomIDScanProcessor {
-    ZoomFaceScanResultCallback ZoomFaceScanResultCallback;
+    FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
     FaceTecSessionResult latestFaceTecSessionResult;
 
     FaceTecIDScanResultCallback zoomIDScanResultCallback;
@@ -66,9 +66,9 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProc
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processSessionResultWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback) {
+    public void processSessionResultWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback) {
         this.latestFaceTecSessionResult = zoomSessionResult;
-        this.ZoomFaceScanResultCallback = ZoomFaceScanResultCallback;
+        this.FaceTecFaceScanResultCallback = FaceTecFaceScanResultCallback;
 
         // Cancel last request in flight.  This handles case where processing is is taking place but cancellation or Context Switch occurs.
         // Our handling here ends the latest in flight request and simply re-does the normal logic, which will cancel out.
@@ -76,26 +76,26 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProc
 
         // cancellation, timeout, etc.
         if (zoomSessionResult.getStatus() != ZoomSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
-            ZoomFaceScanResultCallback.cancel();
-            this.ZoomFaceScanResultCallback = null;
+            FaceTecFaceScanResultCallback.cancel();
+            this.FaceTecFaceScanResultCallback = null;
             return;
         }
 
         // Create and parse request to ZoOm Server.  Note here that for Photo ID Match, onFaceScanResultSucceed sends you to the next phase (ID Scan) rather than completing.
-        NetworkingHelpers.getEnrollmentResponseFromZoomServer(zoomSessionResult, this.ZoomFaceScanResultCallback, new FaceTecManagedAPICallback() {
+        NetworkingHelpers.getEnrollmentResponseFromZoomServer(zoomSessionResult, this.FaceTecFaceScanResultCallback, new FaceTecManagedAPICallback() {
             @Override
             public void onResponse(JSONObject responseJSON) {
                 UXNextStep nextStep = ServerResultHelpers.getEnrollmentNextStep(responseJSON);
                 if (nextStep == UXNextStep.Succeed) {
                     // Dynamically set the success message.
                     ZoomCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
-                    ZoomFaceScanResultCallback.succeed();
+                    FaceTecFaceScanResultCallback.succeed();
                 }
                 else if (nextStep == UXNextStep.Retry) {
-                    ZoomFaceScanResultCallback.retry();
+                    FaceTecFaceScanResultCallback.retry();
                 }
                 else {
-                    ZoomFaceScanResultCallback.cancel();
+                    FaceTecFaceScanResultCallback.cancel();
                 }
             }
         });

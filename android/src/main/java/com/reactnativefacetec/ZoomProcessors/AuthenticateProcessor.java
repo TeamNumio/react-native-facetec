@@ -10,7 +10,7 @@ import android.content.Context;
 
 import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.ZoomFaceScanProcessor;
-import com.facetec.sdk.ZoomFaceScanResultCallback;
+import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.ZoomSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
 import com.facetec.sdk.ZoomSessionStatus;
@@ -18,7 +18,7 @@ import com.facetec.sdk.ZoomSessionStatus;
 import org.json.JSONObject;
 
 public class AuthenticateProcessor extends Processor implements ZoomFaceScanProcessor {
-    ZoomFaceScanResultCallback ZoomFaceScanResultCallback;
+    FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
     FaceTecSessionResult latestFaceTecSessionResult;
     private boolean _isSuccess = false;
     SessionTokenSuccessCallback sessionTokenSuccessCallback;
@@ -46,9 +46,9 @@ public class AuthenticateProcessor extends Processor implements ZoomFaceScanProc
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processSessionResultWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback) {
+    public void processSessionResultWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback) {
         this.latestFaceTecSessionResult = zoomSessionResult;
-        this.ZoomFaceScanResultCallback = ZoomFaceScanResultCallback;
+        this.FaceTecFaceScanResultCallback = FaceTecFaceScanResultCallback;
 
         // Cancel last request in flight.  This handles case where processing is is taking place but cancellation or Context Switch occurs.
         // Our handling here ends the latest in flight request and simply re-does the normal logic, which will cancel out.
@@ -56,13 +56,13 @@ public class AuthenticateProcessor extends Processor implements ZoomFaceScanProc
 
         // cancellation, timeout, etc.
         if (zoomSessionResult.getStatus() != ZoomSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
-            ZoomFaceScanResultCallback.cancel();
-            this.ZoomFaceScanResultCallback = null;
+            FaceTecFaceScanResultCallback.cancel();
+            this.FaceTecFaceScanResultCallback = null;
             return;
         }
 
         // Create and parse request to ZoOm Server.
-        NetworkingHelpers.getAuthenticateResponseFromZoomServer(id, zoomSessionResult, this.ZoomFaceScanResultCallback, new FaceTecManagedAPICallback() {
+        NetworkingHelpers.getAuthenticateResponseFromZoomServer(id, zoomSessionResult, this.FaceTecFaceScanResultCallback, new FaceTecManagedAPICallback() {
             @Override
             public void onResponse(JSONObject responseJSON) {
                 UXNextStep nextStep = ServerResultHelpers.getAuthenticateNextStep(responseJSON);
@@ -72,13 +72,13 @@ public class AuthenticateProcessor extends Processor implements ZoomFaceScanProc
                     // Dynamically set the success message.
                     sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
                     ZoomCustomization.overrideResultScreenSuccessMessage = "Authenticated";
-                    ZoomFaceScanResultCallback.succeed();
+                    FaceTecFaceScanResultCallback.succeed();
                 }
                 else if (nextStep == UXNextStep.Retry) {
-                    ZoomFaceScanResultCallback.retry();
+                    FaceTecFaceScanResultCallback.retry();
                 }
                 else {
-                    ZoomFaceScanResultCallback.cancel();
+                    FaceTecFaceScanResultCallback.cancel();
                 }
             }
         });
