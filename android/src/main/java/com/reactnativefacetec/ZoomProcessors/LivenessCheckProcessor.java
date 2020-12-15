@@ -121,11 +121,6 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
         try {
           JSONObject responseJSON = new JSONObject(responseString);
 
-          //
-          // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
-          // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
-          //
-          sampleAppActivity.setLatestServerResult(responseJSON);
 
           boolean didSucceed = responseJSON.getBoolean("success");
 
