@@ -142,8 +142,8 @@ public class NetworkingHelpers {
         try {
             parameters.put("faceScan", zoomFaceScanBase64);
             parameters.put("sessionId", zoomSessionResult.getSessionId());
-            if(zoomSessionResult.getFaceMetrics().getAuditTrailCompressedBase64().length > 0) {
-                String compressedBase64AuditTrailImage = zoomSessionResult.getFaceMetrics().getAuditTrailCompressedBase64()[0];
+            if(zoomSessionResult.getAuditTrailCompressedBase64().length > 0) {
+                String compressedBase64AuditTrailImage = zoomSessionResult.getAuditTrailCompressedBase64()[0];
                 parameters.put("auditTrailImage", compressedBase64AuditTrailImage);
             }
             // pass the low quality audit trail image
@@ -176,8 +176,8 @@ public class NetworkingHelpers {
             parameters.put("source", sourceObject);
             parameters.put("sessionId", zoomSessionResult.getSessionId());
 
-            if(zoomSessionResult.getFaceMetrics().getAuditTrailCompressedBase64().length > 0) {
-                String compressedBase64AuditTrailImage = zoomSessionResult.getFaceMetrics().getAuditTrailCompressedBase64()[0];
+            if(zoomSessionResult.getAuditTrailCompressedBase64().length > 0) {
+                String compressedBase64AuditTrailImage = zoomSessionResult.getAuditTrailCompressedBase64()[0];
                 parameters.put("auditTrailImage", compressedBase64AuditTrailImage);
             }
             // pass the low quality audit trail image
