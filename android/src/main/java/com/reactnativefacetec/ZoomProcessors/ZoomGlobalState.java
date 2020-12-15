@@ -1,6 +1,6 @@
 package com.reactnativefacetec.ZoomProcessors;
 
-import com.facetec.sdk.ZoomCustomization;
+import com.facetec.sdk.FaceTecCustomization;
 
 public class ZoomGlobalState {
     // Replace string below with your license key from https://dev.zoomlogin.com/zoomsdk/#/account
@@ -29,5 +29,5 @@ public class ZoomGlobalState {
     public static boolean isRandomUsernameEnrolled = false;
 
     // This app can modify the customization to demonstrate different look/feel preferences for ZoOm.
-    public static ZoomCustomization currentCustomization = new ZoomCustomization();
+    public static FaceTecCustomization currentCustomization = new FaceTecCustomization();
 }

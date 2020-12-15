@@ -8,7 +8,7 @@ package com.reactnativefacetec.ZoomProcessors;
 
 import android.content.Context;
 
-import com.facetec.sdk.ZoomCustomization;
+import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.FaceTecSessionActivity;
@@ -71,7 +71,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
                     _isSuccess = true;
                     // Dynamically set the success message.
                     sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
-                    ZoomCustomization.overrideResultScreenSuccessMessage = "Authenticated";
+                    FaceTecCustomization.overrideResultScreenSuccessMessage = "Authenticated";
                     FaceTecFaceScanResultCallback.succeed();
                 }
                 else if (nextStep == UXNextStep.Retry) {

@@ -9,7 +9,7 @@ package com.reactnativefacetec.ZoomProcessors;
 import android.content.Context;
 import android.util.Log;
 
-import com.facetec.sdk.ZoomCustomization;
+import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.FaceTecSessionActivity;
