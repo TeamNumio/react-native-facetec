@@ -81,7 +81,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
                     e.printStackTrace();
                   }
                   Log.i("responseJSON", "responseJSON == "+ responseJSON.toString());
-                    ZoomCustomization.overrideResultScreenSuccessMessage = "Enrollment\nSuccessful";
+                    FaceTecCustomization.overrideResultScreenSuccessMessage = "Enrollment\nSuccessful";
 //                    ZoomGlobalState.isRandomUsernameEnrolled = true;
                     FaceTecFaceScanResultCallback.succeed();
                 }

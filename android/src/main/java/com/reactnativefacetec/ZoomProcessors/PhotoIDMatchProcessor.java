@@ -10,7 +10,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.facetec.sdk.*;
-import com.facetec.sdk.ZoomCustomization;
+import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.ZoomIDScanRetryMode;
 import com.facetec.sdk.ZoomIDScanStatus;
 import com.facetec.sdk.FaceTecSessionActivity;
@@ -81,7 +81,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
                 UXNextStep nextStep = ServerResultHelpers.getEnrollmentNextStep(responseJSON);
                 if (nextStep == UXNextStep.Succeed) {
                     // Dynamically set the success message.
-                    ZoomCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
+                    FaceTecCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
                     FaceTecFaceScanResultCallback.succeed();
                 }
                 else if (nextStep == UXNextStep.Retry) {
@@ -138,7 +138,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
                 if (nextStep == IDScanUXNextStep.Succeed) {
                     _isSuccess = true;
                     // Dynamically set the success message.
-                    ZoomCustomization.overrideResultScreenSuccessMessage = "Your 3D Face\nMatched Your ID";
+                    FaceTecCustomization.overrideResultScreenSuccessMessage = "Your 3D Face\nMatched Your ID";
                     zoomIDScanResultCallback.succeed();
                   Log.i("PhotoIDMatchProcessor", "PhotoIDMatchProcessor == success " + responseJSON.toString());
                   JSONObject obj = new JSONObject();

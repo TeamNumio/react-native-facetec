@@ -8,7 +8,7 @@ package com.reactnativefacetec.ZoomProcessors;
 
 import android.content.Context;
 
-import com.facetec.sdk.ZoomCustomization;
+import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.FaceTecSessionActivity;
@@ -68,7 +68,7 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
                 if (nextStep == UXNextStep.Succeed) {
                     _isSuccess = true;
                     sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
-                    ZoomCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
+                    FaceTecCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
                     FaceTecFaceScanResultCallback.succeed();
                 }
                 else if (nextStep == UXNextStep.Retry) {

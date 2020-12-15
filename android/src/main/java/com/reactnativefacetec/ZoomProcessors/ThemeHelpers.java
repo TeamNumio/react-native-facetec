@@ -8,7 +8,7 @@ import android.graphics.Typeface;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.facetec.sdk.ZoomCancelButtonCustomization;
-import com.facetec.sdk.ZoomCustomization;
+import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.ZoomGuidanceCustomization;
 import com.facetec.sdk.FaceTecSDK;
 import com.reactnativefacetec.R;
@@ -21,14 +21,14 @@ public class ThemeHelpers {
 
   public void setAppTheme(String theme) {
         ZoomGlobalState.currentCustomization = getCustomizationForTheme(theme);
-        ZoomCustomization currentLowLightCustomization = getLowLightCustomizationForTheme(theme);
+        FaceTecCustomization currentLowLightCustomization = getLowLightCustomizationForTheme(theme);
 
         FaceTecSDK.setCustomization(ZoomGlobalState.currentCustomization);
         FaceTecSDK.setLowLightCustomization(currentLowLightCustomization);
     }
 
-    public ZoomCustomization getCustomizationForTheme(String theme) {
-        ZoomCustomization currentCustomization = new ZoomCustomization();
+    public FaceTecCustomization getCustomizationForTheme(String theme) {
+        FaceTecCustomization currentCustomization = new FaceTecCustomization();
 
         int[] retryScreenSlideshowImages = new int[]{R.drawable.FaceTec_ideal_1, R.drawable.FaceTec_ideal_2, R.drawable.FaceTec_ideal_3, R.drawable.FaceTec_ideal_4, R.drawable.FaceTec_ideal_5};
 
@@ -170,8 +170,8 @@ public class ThemeHelpers {
         return currentCustomization;
     }
 
-     ZoomCustomization getLowLightCustomizationForTheme(String theme) {
-        ZoomCustomization currentLowLightCustomization = getCustomizationForTheme(theme);
+     FaceTecCustomization getLowLightCustomizationForTheme(String theme) {
+        FaceTecCustomization currentLowLightCustomization = getCustomizationForTheme(theme);
 
        int primaryColor = Color.parseColor("#1797E3"); // white
        int backgroundColor = Color.parseColor("#FFFFFF"); // navy
