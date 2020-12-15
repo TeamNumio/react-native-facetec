@@ -9,11 +9,11 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.facetec.zoom.sdk.ZoomFaceMapResultCallback;
-import com.facetec.zoom.sdk.ZoomIDScanResult;
-import com.facetec.zoom.sdk.ZoomIDScanResultCallback;
-import com.facetec.zoom.sdk.ZoomSDK;
-import com.facetec.zoom.sdk.ZoomSessionResult;
+import com.facetec.sdk.ZoomFaceMapResultCallback;
+import com.facetec.sdk.ZoomIDScanResult;
+import com.facetec.sdk.ZoomIDScanResultCallback;
+import com.facetec.sdk.ZoomSDK;
+import com.facetec.sdk.ZoomSessionResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;

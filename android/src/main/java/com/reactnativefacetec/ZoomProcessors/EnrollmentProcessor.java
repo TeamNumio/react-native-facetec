@@ -9,12 +9,12 @@ package com.reactnativefacetec.ZoomProcessors;
 import android.content.Context;
 import android.util.Log;
 
-import com.facetec.zoom.sdk.ZoomCustomization;
-import com.facetec.zoom.sdk.ZoomFaceMapProcessor;
-import com.facetec.zoom.sdk.ZoomFaceMapResultCallback;
-import com.facetec.zoom.sdk.ZoomSessionActivity;
-import com.facetec.zoom.sdk.ZoomSessionResult;
-import com.facetec.zoom.sdk.ZoomSessionStatus;
+import com.facetec.sdk.ZoomCustomization;
+import com.facetec.sdk.ZoomFaceMapProcessor;
+import com.facetec.sdk.ZoomFaceMapResultCallback;
+import com.facetec.sdk.ZoomSessionActivity;
+import com.facetec.sdk.ZoomSessionResult;
+import com.facetec.sdk.ZoomSessionStatus;
 
 import org.json.JSONException;
 import org.json.JSONObject;

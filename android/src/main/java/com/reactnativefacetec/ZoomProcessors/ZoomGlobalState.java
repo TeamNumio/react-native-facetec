@@ -1,6 +1,6 @@
 package com.reactnativefacetec.ZoomProcessors;
 
-import com.facetec.zoom.sdk.ZoomCustomization;
+import com.facetec.sdk.ZoomCustomization;
 
 public class ZoomGlobalState {
     // Replace string below with your license key from https://dev.zoomlogin.com/zoomsdk/#/account

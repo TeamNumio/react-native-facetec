@@ -7,10 +7,10 @@ import android.graphics.Typeface;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import com.facetec.zoom.sdk.ZoomCancelButtonCustomization;
-import com.facetec.zoom.sdk.ZoomCustomization;
-import com.facetec.zoom.sdk.ZoomGuidanceCustomization;
-import com.facetec.zoom.sdk.ZoomSDK;
+import com.facetec.sdk.ZoomCancelButtonCustomization;
+import com.facetec.sdk.ZoomCustomization;
+import com.facetec.sdk.ZoomGuidanceCustomization;
+import com.facetec.sdk.ZoomSDK;
 import com.reactnativefacetec.R;
 
 public class ThemeHelpers {
