@@ -1,6 +1,6 @@
 {
-  "name": "react-native-facetec",
-  "version": "0.2.0",
+  "name": "@teamnumio/react-native-facetec",
+  "version": "0.1.0",
   "description": "facetec module bridge",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -36,7 +36,14 @@
     "face-recognition",
     "face-matching"
   ],
-  "repository": "https://github.com/maherzaidoune/react-native-facetec",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeamNumio/react-native-zksync.git",
+    "baseUrl": "https://github.com/TeamNumio/react-native-zksync"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/TeamNumio"
+  },
   "author": "maherzaidoune <maherzaidoune@gmail.com> (https://github.com/maherzaidoune)",
   "license": "MIT",
   "bugs": {
@@ -85,23 +92,6 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
-      }
-    }
   },
   "eslintConfig": {
     "extends": [
