@@ -14,7 +14,7 @@ import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.ZoomSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
-import com.facetec.sdk.ZoomSessionStatus;
+import com.facetec.sdk.FaceTecSessionStatus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +59,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
         NetworkingHelpers.cancelPendingRequests();
 
         // cancellation, timeout, etc.
-        if (zoomSessionResult.getStatus() != ZoomSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
+        if (zoomSessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
             FaceTecFaceScanResultCallback.cancel();
             this.FaceTecFaceScanResultCallback = null;
             return;

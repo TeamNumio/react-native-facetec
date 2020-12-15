@@ -20,7 +20,7 @@ import com.facetec.sdk.ZoomIDScanRetryMode;
 import com.facetec.sdk.ZoomIDScanStatus;
 import com.facetec.sdk.ZoomSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
-import com.facetec.sdk.ZoomSessionStatus;
+import com.facetec.sdk.FaceTecSessionStatus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +75,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
         NetworkingHelpers.cancelPendingRequests();
 
         // cancellation, timeout, etc.
-        if (zoomSessionResult.getStatus() != ZoomSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
+        if (zoomSessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
             FaceTecFaceScanResultCallback.cancel();
             this.FaceTecFaceScanResultCallback = null;
             return;

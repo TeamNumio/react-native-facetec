@@ -13,7 +13,7 @@ import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.ZoomSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
-import com.facetec.sdk.ZoomSessionStatus;
+import com.facetec.sdk.FaceTecSessionStatus;
 
 import org.json.JSONObject;
 
@@ -53,7 +53,7 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
         NetworkingHelpers.cancelPendingRequests();
 
         // cancellation, timeout, etc.
-        if (zoomSessionResult.getStatus() != ZoomSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
+        if (zoomSessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
             FaceTecFaceScanResultCallback.cancel();
             this.FaceTecFaceScanResultCallback = null;
             return;
