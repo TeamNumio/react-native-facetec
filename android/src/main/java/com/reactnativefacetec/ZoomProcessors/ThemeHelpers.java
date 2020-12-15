@@ -2,12 +2,10 @@ package com.reactnativefacetec.ZoomProcessors;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import com.facetec.sdk.ZoomCancelButtonCustomization;
+import com.facetec.sdk.FaceTecCancelButtonCustomization;
 import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.ZoomGuidanceCustomization;
 import com.facetec.sdk.FaceTecSDK;
@@ -166,7 +164,7 @@ public class ThemeHelpers {
             currentCustomization.getOvalCustomization().progressColor2 = Color.parseColor("#BFFFFFFF");
             // Cancel Button Customization
             currentCustomization.getCancelButtonCustomization().customImage = R.drawable.cancel_navy;
-            currentCustomization.getCancelButtonCustomization().setLocation(ZoomCancelButtonCustomization.ButtonLocation.TOP_LEFT);
+            currentCustomization.getCancelButtonCustomization().setLocation(FaceTecCancelButtonCustomization.ButtonLocation.TOP_LEFT);
         return currentCustomization;
     }
 
@@ -308,7 +306,7 @@ public class ThemeHelpers {
        currentLowLightCustomization.getOvalCustomization().progressColor2 = Color.parseColor("#BFFFFFFF");
        // Cancel Button Customization
        currentLowLightCustomization.getCancelButtonCustomization().customImage = R.drawable.cancel_navy;
-       currentLowLightCustomization.getCancelButtonCustomization().setLocation(ZoomCancelButtonCustomization.ButtonLocation.TOP_LEFT);
+       currentLowLightCustomization.getCancelButtonCustomization().setLocation(FaceTecCancelButtonCustomization.ButtonLocation.TOP_LEFT);
 
             currentLowLightCustomization.getCancelButtonCustomization().customImage = R.drawable.cancel_navy;
 
