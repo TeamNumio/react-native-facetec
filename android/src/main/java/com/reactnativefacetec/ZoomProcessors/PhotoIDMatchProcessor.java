@@ -12,7 +12,6 @@ import android.util.Log;
 import com.facetec.sdk.*;
 import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.FaceTecIDScanRetryMode;
-import com.facetec.sdk.ZoomIDScanStatus;
 import com.facetec.sdk.FaceTecSessionActivity;
 
 import org.json.JSONException;
@@ -59,7 +58,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processSessionResultWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback) {
+    public void processSessionWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback) {
         this.latestFaceTecSessionResult = zoomSessionResult;
         this.FaceTecFaceScanResultCallback = FaceTecFaceScanResultCallback;
 
@@ -96,7 +95,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processIDScanResultWhileFaceTecSDKWaits(FaceTecIDScanResult zoomIDScanResult, final FaceTecIDScanResultCallback zoomIDScanResultCallback) {
+    public void processIDScanWhileFaceTecSDKWaits(FaceTecIDScanResult zoomIDScanResult, final FaceTecIDScanResultCallback zoomIDScanResultCallback) {
         this.latestFaceTecIDScanResult = zoomIDScanResult;
         this.zoomIDScanResultCallback = zoomIDScanResultCallback;
 
