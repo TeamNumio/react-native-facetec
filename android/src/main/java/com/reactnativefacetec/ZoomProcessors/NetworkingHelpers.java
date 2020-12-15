@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import com.facetec.sdk.ZoomFaceScanResultCallback;
 import com.facetec.sdk.ZoomIDScanResult;
 import com.facetec.sdk.ZoomIDScanResultCallback;
-import com.facetec.sdk.ZoomSDK;
+import com.facetec.sdk.FaceTecSDK;
 import com.facetec.sdk.FaceTecSessionResult;
 
 import org.json.JSONException;
@@ -95,7 +95,7 @@ public class NetworkingHelpers {
         // Do the network call and handle result
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-                .header("User-Agent", ZoomSDK.createZoomAPIUserAgentString(""))
+                .header("User-Agent", FaceTecSDK.createZoomAPIUserAgentString(""))
                 .url(ZoomGlobalState.ZoomServerBaseURL + "/session-token")
                 .get()
                 .build();
@@ -104,7 +104,7 @@ public class NetworkingHelpers {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                Log.d("ZoomSDK", "Exception raised while attempting HTTPS call.");
+                Log.d("FaceTecSDK", "Exception raised while attempting HTTPS call.");
 
                 // If this comes from HTTPS cancel call, don't set the sub code to NETWORK_ERROR.
                 if(!e.getMessage().equals(OK_HTTP_RESPONSE_CANCELED)) {
@@ -127,7 +127,7 @@ public class NetworkingHelpers {
                 }
                 catch(JSONException e) {
                     e.printStackTrace();
-                    Log.d("ZoomSDK", "Exception raised while attempting to parse JSON result.");
+                    Log.d("FaceTecSDK", "Exception raised while attempting to parse JSON result.");
                     sessionTokenCallback.onError();
                 }
             }
@@ -155,7 +155,7 @@ public class NetworkingHelpers {
         }
         catch(JSONException e) {
             e.printStackTrace();
-            Log.d("ZoomSDK", "Exception raised while attempting to create JSON payload for upload.");
+            Log.d("FaceTecSDK", "Exception raised while attempting to create JSON payload for upload.");
         }
         return parameters;
     }
@@ -188,7 +188,7 @@ public class NetworkingHelpers {
         }
         catch(JSONException e) {
             e.printStackTrace();
-            Log.d("ZoomSDK", "Exception raised while attempting to create JSON payload for upload.");
+            Log.d("FaceTecSDK", "Exception raised while attempting to create JSON payload for upload.");
         }
         return parameters;
     }
@@ -215,7 +215,7 @@ public class NetworkingHelpers {
         }
         catch(JSONException e) {
             e.printStackTrace();
-            Log.d("ZoomSDK", "Exception raised while attempting to create JSON payload for upload.");
+            Log.d("FaceTecSDK", "Exception raised while attempting to create JSON payload for upload.");
         }
         return parameters;
     }
@@ -298,7 +298,7 @@ public class NetworkingHelpers {
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .header("Content-Type", "application/json")
                 .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-                .header("User-Agent", ZoomSDK.createZoomAPIUserAgentString(zoomSessionResult.getSessionId()))
+                .header("User-Agent", FaceTecSDK.createZoomAPIUserAgentString(zoomSessionResult.getSessionId()))
                 .url(endpoint)
                 .post(progressRequestBody)
                 .build();
@@ -308,7 +308,7 @@ public class NetworkingHelpers {
             public void onFailure(Call call, IOException e) {
                 requestInProgress = false;
                 e.printStackTrace();
-                Log.d("ZoomSDK", "Exception raised while attempting HTTPS call.");
+                Log.d("FaceTecSDK", "Exception raised while attempting HTTPS call.");
 
                 // If this comes from HTTPS cancel call, don't set the sub code to NETWORK_ERROR.
                 if(!e.getMessage().equals(OK_HTTP_RESPONSE_CANCELED)) {
@@ -327,7 +327,7 @@ public class NetworkingHelpers {
                 }
                 catch(JSONException e) {
                     e.printStackTrace();
-                    Log.d("ZoomSDK", "Exception raised while attempting to parse JSON result.");
+                    Log.d("FaceTecSDK", "Exception raised while attempting to parse JSON result.");
                     ZoomFaceScanResultCallback.cancel();
                 }
             }
@@ -367,7 +367,7 @@ public class NetworkingHelpers {
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .header("Content-Type", "application/json")
                 .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-                .header("User-Agent", ZoomSDK.createZoomAPIUserAgentString(sessionId))
+                .header("User-Agent", FaceTecSDK.createZoomAPIUserAgentString(sessionId))
                 .url(endpoint)
                 .post(progressRequestBody)
                 .build();
@@ -377,7 +377,7 @@ public class NetworkingHelpers {
             public void onFailure(Call call, IOException e) {
                 requestInProgress = false;
                 e.printStackTrace();
-                Log.d("ZoomSDK", "Exception raised while attempting HTTPS call.");
+                Log.d("FaceTecSDK", "Exception raised while attempting HTTPS call.");
 
                 // If this comes from HTTPS cancel call, don't set the sub code to NETWORK_ERROR.
                 if(!e.getMessage().equals(OK_HTTP_RESPONSE_CANCELED)) {
@@ -396,7 +396,7 @@ public class NetworkingHelpers {
                 }
                 catch(JSONException e) {
                     e.printStackTrace();
-                    Log.d("ZoomSDK", "Exception raised while attempting to parse JSON result.");
+                    Log.d("FaceTecSDK", "Exception raised while attempting to parse JSON result.");
                     zoomIDScanResultCallback.cancel();
                 }
             }
@@ -601,7 +601,7 @@ class ServerResultHelpers {
         }
         catch(JSONException e) {
             e.printStackTrace();
-            Log.d("ZoomSDK", "Error while parsing JSON result.");
+            Log.d("FaceTecSDK", "Error while parsing JSON result.");
             return IDScanUXNextStep.Cancel;
         }
     }

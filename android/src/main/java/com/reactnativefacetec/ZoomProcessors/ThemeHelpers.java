@@ -10,7 +10,7 @@ import androidx.core.content.res.ResourcesCompat;
 import com.facetec.sdk.ZoomCancelButtonCustomization;
 import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.ZoomGuidanceCustomization;
-import com.facetec.sdk.ZoomSDK;
+import com.facetec.sdk.FaceTecSDK;
 import com.reactnativefacetec.R;
 
 public class ThemeHelpers {
@@ -23,8 +23,8 @@ public class ThemeHelpers {
         ZoomGlobalState.currentCustomization = getCustomizationForTheme(theme);
         ZoomCustomization currentLowLightCustomization = getLowLightCustomizationForTheme(theme);
 
-        ZoomSDK.setCustomization(ZoomGlobalState.currentCustomization);
-        ZoomSDK.setLowLightCustomization(currentLowLightCustomization);
+        FaceTecSDK.setCustomization(ZoomGlobalState.currentCustomization);
+        FaceTecSDK.setLowLightCustomization(currentLowLightCustomization);
     }
 
     public ZoomCustomization getCustomizationForTheme(String theme) {

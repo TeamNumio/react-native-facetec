@@ -18,7 +18,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.ZoomGuidanceCustomization;
-import com.facetec.sdk.ZoomSDK;
+import com.facetec.sdk.FaceTecSDK;
 import com.reactnativefacetec.ZoomProcessors.AuthenticateProcessor;
 import com.reactnativefacetec.ZoomProcessors.EnrollmentProcessor;
 import com.reactnativefacetec.ZoomProcessors.LivenessCheckProcessor;
@@ -76,16 +76,16 @@ public class FacetecModule extends ReactContextBaseJavaModule {
     this.onSuccess = onSuccess;
     this.onFail = onFail;
 
-    ZoomSDK.initialize(
+    FaceTecSDK.initialize(
       reactContext,
       ZoomGlobalState.DeviceLicenseKeyIdentifier,
       ZoomGlobalState.PublicFaceScanEncryptionKey,
-      new ZoomSDK.InitializeCallback() {
+      new FaceTecSDK.InitializeCallback() {
         @Override
         public void onCompletion(final boolean successful) {
           WritableMap params = Arguments.createMap();
           try{
-            params.putString("initState", ZoomSDK.getStatus(getCurrentActivity()).toString());
+            params.putString("initState", FaceTecSDK.getStatus(getCurrentActivity()).toString());
           }catch (Exception e){
             e.printStackTrace();
           }
