@@ -195,16 +195,16 @@ public class NetworkingHelpers {
 
     // Set up parameters needed to communicate to the API for Photo ID Match.
     public static JSONObject getPhotoIDParameters(String id, FaceTecIDScanResult zoomIDScanResult) {
-        String zoomIDScanBase64 = zoomIDScanResult.getIDScanMetrics().getIDScanBase64();
-        String sessionId = zoomIDScanResult.getIDScanMetrics().getSessionId();
+        String zoomIDScanBase64 = zoomIDScanResult.getIDScanBase64();
+        String sessionId = zoomIDScanResult.getSessionId();
         JSONObject parameters = new JSONObject();
         try {
             parameters.put("enrollmentIdentifier", id);
             parameters.put("idScan", zoomIDScanBase64);
             parameters.put("sessionId", sessionId);
 
-            ArrayList<String> frontImagesCompressedBase64 = zoomIDScanResult.getIDScanMetrics().getFrontImagesCompressedBase64();
-            ArrayList<String> backImagesCompressedBase64 = zoomIDScanResult.getIDScanMetrics().getBackImagesCompressedBase64();
+            ArrayList<String> frontImagesCompressedBase64 = zoomIDScanResult.getFrontImagesCompressedBase64();
+            ArrayList<String> backImagesCompressedBase64 = zoomIDScanResult.getBackImagesCompressedBase64();
 
             if(frontImagesCompressedBase64.size() > 0) {
                 parameters.put("idScanFrontImage", frontImagesCompressedBase64.get(0));
@@ -352,7 +352,7 @@ public class NetworkingHelpers {
     // Note that for initial integration this sends to the FaceTec Managed Testing API.
     // After deployment of your own instance of ZoOm Server, this will be your own configurable endpoint.
     private static void callFaceTecManagedAPIForIDCheck(String endpoint, JSONObject parameters, FaceTecIDScanResult zoomIDScanResult, final FaceTecIDScanResultCallback zoomIDScanResultCallback, final FaceTecManagedAPICallback resultCallback) {
-        String sessionId = zoomIDScanResult.getIDScanMetrics().getSessionId();
+        String sessionId = zoomIDScanResult.getSessionId();
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), parameters.toString());
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody,

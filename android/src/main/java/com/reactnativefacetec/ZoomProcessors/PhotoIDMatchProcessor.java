@@ -9,6 +9,7 @@ package com.reactnativefacetec.ZoomProcessors;
 import android.content.Context;
 import android.util.Log;
 
+import com.facetec.sdk.FaceTecIDScanStatus;
 import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.ZoomFaceScanProcessor;
 import com.facetec.sdk.ZoomFaceScanResultCallback;
@@ -112,21 +113,22 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProc
         NetworkingHelpers.cancelPendingRequests();
 
         // cancellation, timeout, etc.
-        if(zoomIDScanResult.getZoomIDScanStatus() != ZoomIDScanStatus.SUCCESS) {
+        if(zoomIDScanResult.getStatus() != FaceTecIDScanStatus.SUCCESS) {
           Log.i("PhotoIDMatchProcessor", "PhotoIDMatchProcessor == Not suceess");
             zoomIDScanResultCallback.cancel();
             this.zoomIDScanResultCallback = null;
             return;
         }
 
-        if(zoomIDScanResult.getIDScanMetrics() == null) {
+        // NOTE: some guesswork here
+        if(zoomIDScanResult.getIDType() == null) {
           Log.i("PhotoIDMatchProcessor", "PhotoIDMatchProcessor metrics == Null");
           zoomIDScanResultCallback.cancel();
             this.zoomIDScanResultCallback = null;
             return;
         }
 
-        if(zoomIDScanResult.getIDScanMetrics().getIDScan() == null) {
+        if(zoomIDScanResult.getIDScan() == null) {
           Log.i("PhotoIDMatchProcessor", "PhotoIDMatchProcessor id == Null");
           zoomIDScanResultCallback.cancel();
             this.zoomIDScanResultCallback = null;
@@ -150,9 +152,9 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProc
                   try {
 
                     obj.put("responseJSON", responseJSON.getJSONObject("data").toString());
-                    obj.put("FrontImagesCompressedBase64", zoomIDScanResult.getIDScanMetrics().getFrontImagesCompressedBase64().get(0));
-                    if(zoomIDScanResult.getIDScanMetrics().getBackImagesCompressedBase64() != null && zoomIDScanResult.getIDScanMetrics().getBackImagesCompressedBase64().size() > 0){
-                        obj.put("BackImagesCompressedBase64", zoomIDScanResult.getIDScanMetrics().getBackImagesCompressedBase64().get(0));
+                    obj.put("FrontImagesCompressedBase64", zoomIDScanResult.getFrontImagesCompressedBase64().get(0));
+                    if(zoomIDScanResult.getBackImagesCompressedBase64() != null && zoomIDScanResult.getBackImagesCompressedBase64().size() > 0){
+                        obj.put("BackImagesCompressedBase64", zoomIDScanResult.getBackImagesCompressedBase64().get(0));
                     }
 
 
@@ -161,11 +163,11 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProc
                       sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
                       try{
                         obj.put("responseJSON", responseJSON.toString());
-                        if(zoomIDScanResult.getIDScanMetrics().getFrontImagesCompressedBase64() != null && zoomIDScanResult.getIDScanMetrics().getFrontImagesCompressedBase64().size() > 0){
-                            obj.put("FrontImagesCompressedBase64", zoomIDScanResult.getIDScanMetrics().getFrontImagesCompressedBase64().get(0));
+                        if(zoomIDScanResult.getFrontImagesCompressedBase64() != null && zoomIDScanResult.getFrontImagesCompressedBase64().size() > 0){
+                            obj.put("FrontImagesCompressedBase64", zoomIDScanResult.getFrontImagesCompressedBase64().get(0));
                         }
-                          if(zoomIDScanResult.getIDScanMetrics().getBackImagesCompressedBase64() != null && zoomIDScanResult.getIDScanMetrics().getBackImagesCompressedBase64().size() > 0){
-                              obj.put("BackImagesCompressedBase64", zoomIDScanResult.getIDScanMetrics().getBackImagesCompressedBase64().get(0));
+                          if(zoomIDScanResult.getBackImagesCompressedBase64() != null && zoomIDScanResult.getBackImagesCompressedBase64().size() > 0){
+                              obj.put("BackImagesCompressedBase64", zoomIDScanResult.getBackImagesCompressedBase64().get(0));
                           }
 
                       }catch (Exception e1){
@@ -186,8 +188,8 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProc
                   JSONObject obj = new JSONObject();
                     try{
                       obj.put("responseJSON", responseJSON.toString());
-                      obj.put("FrontImagesCompressedBase64", zoomIDScanResult.getIDScanMetrics().getFrontImagesCompressedBase64());
-                      obj.put("BackImagesCompressedBase64", zoomIDScanResult.getIDScanMetrics().getBackImagesCompressedBase64());
+                      obj.put("FrontImagesCompressedBase64", zoomIDScanResult.getFrontImagesCompressedBase64());
+                      obj.put("BackImagesCompressedBase64", zoomIDScanResult.getBackImagesCompressedBase64());
                       sessionTokenErrorCallback.onError(obj.toString());
 
                     }catch (Exception w){
