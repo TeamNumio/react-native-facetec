@@ -7,7 +7,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.facetec.sdk.FaceTecCancelButtonCustomization;
 import com.facetec.sdk.FaceTecCustomization;
-import com.facetec.sdk.ZoomGuidanceCustomization;
+import com.facetec.sdk.FaceTecGuidanceCustomization;
 import com.facetec.sdk.FaceTecSDK;
 import com.reactnativefacetec.R;
 
