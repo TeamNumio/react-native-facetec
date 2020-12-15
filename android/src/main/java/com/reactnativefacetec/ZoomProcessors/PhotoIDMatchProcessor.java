@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.facetec.sdk.FaceTecIDScanStatus;
 import com.facetec.sdk.ZoomCustomization;
-import com.facetec.sdk.ZoomFaceScanProcessor;
+import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.ZoomIDScanProcessor;
 import com.facetec.sdk.FaceTecIDScanResult;
@@ -27,7 +27,7 @@ import org.json.JSONObject;
 
 import static java.util.UUID.randomUUID;
 
-public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProcessor, ZoomIDScanProcessor {
+public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanProcessor, ZoomIDScanProcessor {
     FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
     FaceTecSessionResult latestFaceTecSessionResult;
 

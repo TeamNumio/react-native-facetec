@@ -10,7 +10,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.facetec.sdk.ZoomCustomization;
-import com.facetec.sdk.ZoomFaceScanProcessor;
+import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.ZoomSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import static java.util.UUID.randomUUID;
 
-public class EnrollmentProcessor extends Processor implements ZoomFaceScanProcessor {
+public class EnrollmentProcessor extends Processor implements FaceTecFaceScanProcessor {
     FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
     FaceTecSessionResult latestFaceTecSessionResult;
     private boolean _isSuccess = false;

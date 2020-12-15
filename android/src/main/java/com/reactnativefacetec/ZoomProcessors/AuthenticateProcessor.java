@@ -9,7 +9,7 @@ package com.reactnativefacetec.ZoomProcessors;
 import android.content.Context;
 
 import com.facetec.sdk.ZoomCustomization;
-import com.facetec.sdk.ZoomFaceScanProcessor;
+import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
 import com.facetec.sdk.ZoomSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
@@ -17,7 +17,7 @@ import com.facetec.sdk.ZoomSessionStatus;
 
 import org.json.JSONObject;
 
-public class AuthenticateProcessor extends Processor implements ZoomFaceScanProcessor {
+public class AuthenticateProcessor extends Processor implements FaceTecFaceScanProcessor {
     FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
     FaceTecSessionResult latestFaceTecSessionResult;
     private boolean _isSuccess = false;
