@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.facetec.sdk.*;
 import com.facetec.sdk.FaceTecCustomization;
-import com.facetec.sdk.ZoomIDScanRetryMode;
+import com.facetec.sdk.FaceTecIDScanRetryMode;
 import com.facetec.sdk.ZoomIDScanStatus;
 import com.facetec.sdk.FaceTecSessionActivity;
 
@@ -171,11 +171,11 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
                 }
                 else if (nextStep == IDScanUXNextStep.Retry) {
 //                  sessionTokenErrorCallback.onError(responseJSON.toString());
-                  zoomIDScanResultCallback.retry(ZoomIDScanRetryMode.FRONT);
+                  zoomIDScanResultCallback.retry(FaceTecIDScanRetryMode.FRONT);
                 }
                 else if (nextStep == IDScanUXNextStep.RetryInvalidId) {
 //                  sessionTokenErrorCallback.onError(responseJSON.toString());
-                  zoomIDScanResultCallback.retry(ZoomIDScanRetryMode.FRONT, "Photo ID\nNot Fully Visible");
+                  zoomIDScanResultCallback.retry(FaceTecIDScanRetryMode.FRONT, "Photo ID\nNot Fully Visible");
                 }
                 else {
                   JSONObject obj = new JSONObject();
