@@ -30,7 +30,7 @@ public class ThemeHelpers {
     public ZoomCustomization getCustomizationForTheme(String theme) {
         ZoomCustomization currentCustomization = new ZoomCustomization();
 
-        int[] retryScreenSlideshowImages = new int[]{R.drawable.zoom_ideal_1, R.drawable.zoom_ideal_2, R.drawable.zoom_ideal_3, R.drawable.zoom_ideal_4, R.drawable.zoom_ideal_5};
+        int[] retryScreenSlideshowImages = new int[]{R.drawable.FaceTec_ideal_1, R.drawable.FaceTec_ideal_2, R.drawable.FaceTec_ideal_3, R.drawable.FaceTec_ideal_4, R.drawable.FaceTec_ideal_5};
 
             int primaryColor = Color.parseColor("#1797E3"); // white
             int backgroundColor = Color.parseColor("#FFFFFF"); // navy
@@ -40,7 +40,7 @@ public class ThemeHelpers {
       // Overlay Customization
             currentCustomization.getOverlayCustomization().backgroundColor = backgroundColor;
             currentCustomization.getOverlayCustomization().showBrandingImage = true;
-            currentCustomization.getOverlayCustomization().brandingImage = R.color.zoom_hint_white;
+            currentCustomization.getOverlayCustomization().brandingImage = R.color.FaceTec_hint_white;
             // Guidance Customization
             currentCustomization.getGuidanceCustomization().backgroundColors = backgroundColor;
             currentCustomization.getGuidanceCustomization().foregroundColor = primaryColor;
@@ -177,12 +177,12 @@ public class ThemeHelpers {
        int backgroundColor = Color.parseColor("#FFFFFF"); // navy
        int numio = Color.parseColor("#42C560");
        int buttonText = Color.parseColor("#414141");
-       int[] retryScreenSlideshowImages = new int[]{R.drawable.zoom_ideal_1, R.drawable.zoom_ideal_2, R.drawable.zoom_ideal_3, R.drawable.zoom_ideal_4, R.drawable.zoom_ideal_5};
+       int[] retryScreenSlideshowImages = new int[]{R.drawable.FaceTec_ideal_1, R.drawable.FaceTec_ideal_2, R.drawable.FaceTec_ideal_3, R.drawable.FaceTec_ideal_4, R.drawable.FaceTec_ideal_5};
 
        // Overlay Customization
        currentLowLightCustomization.getOverlayCustomization().backgroundColor = backgroundColor;
        currentLowLightCustomization.getOverlayCustomization().showBrandingImage = true;
-       currentLowLightCustomization.getOverlayCustomization().brandingImage = R.color.zoom_hint_white;
+       currentLowLightCustomization.getOverlayCustomization().brandingImage = R.color.FaceTec_hint_white;
        // Guidance Customization
        currentLowLightCustomization.getGuidanceCustomization().backgroundColors = backgroundColor;
        currentLowLightCustomization.getGuidanceCustomization().foregroundColor = primaryColor;
