@@ -136,11 +136,11 @@ public class NetworkingHelpers {
 
     // Set up common parameters needed to communicate to the API.
     public static JSONObject getCommonParameters(ZoomSessionResult zoomSessionResult) {
-        String zoomFaceMapBase64 = zoomSessionResult.getFaceMetrics().getFaceMapBase64();
+        String zoomFaceScanBase64 = zoomSessionResult.getFaceMetrics().getFaceScanBase64();
 
         JSONObject parameters = new JSONObject();
         try {
-            parameters.put("faceMap", zoomFaceMapBase64);
+            parameters.put("faceScan", zoomFaceScanBase64);
             parameters.put("sessionId", zoomSessionResult.getSessionId());
             if(zoomSessionResult.getFaceMetrics().getAuditTrailCompressedBase64().length > 0) {
                 String compressedBase64AuditTrailImage = zoomSessionResult.getFaceMetrics().getAuditTrailCompressedBase64()[0];
@@ -162,14 +162,14 @@ public class NetworkingHelpers {
 
     // Set up parameters needed to communicate to the API for Liveness + Matching (Authenticate).
     public static JSONObject getAuthenticateParameters(String id, ZoomSessionResult zoomSessionResult) {
-        String zoomFaceMapBase64 = zoomSessionResult.getFaceMetrics().getFaceMapBase64();
+        String zoomFaceScanBase64 = zoomSessionResult.getFaceMetrics().getFaceScanBase64();
 
         JSONObject parameters = new JSONObject();
         JSONObject sourceObject = new JSONObject();
         JSONObject targetObject = new JSONObject();
 
         try {
-            targetObject.put("faceMap", zoomFaceMapBase64);
+            targetObject.put("faceScan", zoomFaceScanBase64);
             sourceObject.put("enrollmentIdentifier", id);
             parameters.put("performContinuousLearning", true);
             parameters.put("target", targetObject);
@@ -549,19 +549,19 @@ class ServerResultHelpers {
 
     // If isEnrolled and Liveness was Determined, succeed.  Otherwise retry.  Unexpected responses cancel.
     public static UXNextStep getAuthenticateNextStep(JSONObject responseJSONObj){
-        // If both FaceMaps have Liveness Proven, and Match Level is 10 (1 in 4.2 million), then succeed.  Otherwise retry.  Unexpected responses cancel.
+        // If both FaceScans have Liveness Proven, and Match Level is 10 (1 in 4.2 million), then succeed.  Otherwise retry.  Unexpected responses cancel.
         try {
             if(responseJSONObj.has("data") && responseJSONObj.getJSONObject("data").getInt("matchLevel") == 10 &&
-                    responseJSONObj.getJSONObject("data").has("targetFaceMap") && responseJSONObj.getJSONObject("data").getJSONObject("targetFaceMap").getInt("livenessStatus") == 0 &&
-                    responseJSONObj.getJSONObject("data").has("sourceFaceMap") && responseJSONObj.getJSONObject("data").getJSONObject("sourceFaceMap").getInt("livenessStatus") == 0) {
+                    responseJSONObj.getJSONObject("data").has("targetFaceScan") && responseJSONObj.getJSONObject("data").getJSONObject("targetFaceScan").getInt("livenessStatus") == 0 &&
+                    responseJSONObj.getJSONObject("data").has("sourceFaceScan") && responseJSONObj.getJSONObject("data").getJSONObject("sourceFaceScan").getInt("livenessStatus") == 0) {
                 return UXNextStep.Succeed;
             }
             else if(responseJSONObj.has("data") &&
-                    responseJSONObj.getJSONObject("data").has("targetFaceMap") &&
-                    responseJSONObj.getJSONObject("data").has("sourceFaceMap") &&
+                    responseJSONObj.getJSONObject("data").has("targetFaceScan") &&
+                    responseJSONObj.getJSONObject("data").has("sourceFaceScan") &&
                     responseJSONObj.getJSONObject("data").getInt("matchLevel") != 10 ||
-                    responseJSONObj.getJSONObject("data").getJSONObject("targetFaceMap").getInt("livenessStatus") != 0 ||
-                    responseJSONObj.getJSONObject("data").getJSONObject("sourceFaceMap").getInt("livenessStatus") != 0) {
+                    responseJSONObj.getJSONObject("data").getJSONObject("targetFaceScan").getInt("livenessStatus") != 0 ||
+                    responseJSONObj.getJSONObject("data").getJSONObject("sourceFaceScan").getInt("livenessStatus") != 0) {
                 return UXNextStep.Retry;
             }
             else {
@@ -573,9 +573,9 @@ class ServerResultHelpers {
         }
     }
 
-    // If Liveness was Determined and 3D FaceMap matches the ID Scan, succeed.  Otherwise retry.  Unexpected responses cancel.
+    // If Liveness was Determined and 3D FaceScan matches the ID Scan, succeed.  Otherwise retry.  Unexpected responses cancel.
     public static IDScanUXNextStep getPhotoIDMatchNextStep(JSONObject responseJSON) {
-        // If Liveness Proven on FaceMap, and Match Level between FaceMap and ID Photo is non-zero, then succeed.  Otherwise retry.  Unexpected responses cancel.
+        // If Liveness Proven on FaceScan, and Match Level between FaceScan and ID Photo is non-zero, then succeed.  Otherwise retry.  Unexpected responses cancel.
         try {
             if(responseJSON.has("meta") && responseJSON.getJSONObject("meta").getBoolean("ok") &&
                     responseJSON.getJSONObject("data").getInt("livenessStatus") == 0 &&

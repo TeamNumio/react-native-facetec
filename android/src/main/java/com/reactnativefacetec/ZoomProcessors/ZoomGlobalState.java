@@ -11,9 +11,9 @@ public class ZoomGlobalState {
     // Otherwise, your webservice URL.
     public static String ZoomServerBaseURL = "https://api.zoomauth.com/api/v2/biometrics";
 
-    // The customer-controlled public key used during encryption of FaceMap data.
+    // The customer-controlled public key used during encryption of FaceScan data.
     // Please see https://dev.zoomlogin.com/zoomsdk/#/licensing-and-encryption-keys for more information.
-    public static String PublicFaceMapEncryptionKey =
+    public static String PublicFaceScanEncryptionKey =
         "-----BEGIN PUBLIC KEY-----\n" +
         "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5PxZ3DLj+zP6T6HFgzzk\n" +
         "M77LdzP3fojBoLasw7EfzvLMnJNUlyRb5m8e5QyyJxI+wRjsALHvFgLzGwxM8ehz\n" +

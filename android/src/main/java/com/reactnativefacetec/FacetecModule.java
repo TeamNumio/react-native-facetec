@@ -79,7 +79,7 @@ public class FacetecModule extends ReactContextBaseJavaModule {
     ZoomSDK.initialize(
       reactContext,
       ZoomGlobalState.DeviceLicenseKeyIdentifier,
-      ZoomGlobalState.PublicFaceMapEncryptionKey,
+      ZoomGlobalState.PublicFaceScanEncryptionKey,
       new ZoomSDK.InitializeCallback() {
         @Override
         public void onCompletion(final boolean successful) {
