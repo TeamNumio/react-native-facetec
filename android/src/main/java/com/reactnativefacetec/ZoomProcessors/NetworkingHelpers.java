@@ -136,7 +136,7 @@ public class NetworkingHelpers {
 
     // Set up common parameters needed to communicate to the API.
     public static JSONObject getCommonParameters(FaceTecSessionResult zoomSessionResult) {
-        String zoomFaceScanBase64 = zoomSessionResult.getFaceMetrics().getFaceScanBase64();
+        String zoomFaceScanBase64 = zoomSessionResult.getFaceScanBase64();
 
         JSONObject parameters = new JSONObject();
         try {
@@ -162,7 +162,7 @@ public class NetworkingHelpers {
 
     // Set up parameters needed to communicate to the API for Liveness + Matching (Authenticate).
     public static JSONObject getAuthenticateParameters(String id, FaceTecSessionResult zoomSessionResult) {
-        String zoomFaceScanBase64 = zoomSessionResult.getFaceMetrics().getFaceScanBase64();
+        String zoomFaceScanBase64 = zoomSessionResult.getFaceScanBase64();
 
         JSONObject parameters = new JSONObject();
         JSONObject sourceObject = new JSONObject();
