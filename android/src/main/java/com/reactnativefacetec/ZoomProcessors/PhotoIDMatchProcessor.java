@@ -102,7 +102,7 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceMapProce
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processZoomIDScanResultWhileZoomWaits(ZoomIDScanResult zoomIDScanResult, final ZoomIDScanResultCallback zoomIDScanResultCallback) {
+    public void processIDScanResultWhileFaceTecSDKWaits(ZoomIDScanResult zoomIDScanResult, final ZoomIDScanResultCallback zoomIDScanResultCallback) {
         this.latestZoomIDScanResult = zoomIDScanResult;
         this.zoomIDScanResultCallback = zoomIDScanResultCallback;
 
