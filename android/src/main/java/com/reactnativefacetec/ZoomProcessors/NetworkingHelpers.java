@@ -13,7 +13,7 @@ import com.facetec.sdk.ZoomFaceScanResultCallback;
 import com.facetec.sdk.ZoomIDScanResult;
 import com.facetec.sdk.ZoomIDScanResultCallback;
 import com.facetec.sdk.ZoomSDK;
-import com.facetec.sdk.ZoomSessionResult;
+import com.facetec.sdk.FaceTecSessionResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -135,7 +135,7 @@ public class NetworkingHelpers {
     }
 
     // Set up common parameters needed to communicate to the API.
-    public static JSONObject getCommonParameters(ZoomSessionResult zoomSessionResult) {
+    public static JSONObject getCommonParameters(FaceTecSessionResult zoomSessionResult) {
         String zoomFaceScanBase64 = zoomSessionResult.getFaceMetrics().getFaceScanBase64();
 
         JSONObject parameters = new JSONObject();
@@ -161,7 +161,7 @@ public class NetworkingHelpers {
     }
 
     // Set up parameters needed to communicate to the API for Liveness + Matching (Authenticate).
-    public static JSONObject getAuthenticateParameters(String id, ZoomSessionResult zoomSessionResult) {
+    public static JSONObject getAuthenticateParameters(String id, FaceTecSessionResult zoomSessionResult) {
         String zoomFaceScanBase64 = zoomSessionResult.getFaceMetrics().getFaceScanBase64();
 
         JSONObject parameters = new JSONObject();
@@ -221,7 +221,7 @@ public class NetworkingHelpers {
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getLivenessCheckResponseFromZoomServer(ZoomSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getLivenessCheckResponseFromZoomServer(FaceTecSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getCommonParameters(zoomSessionResult);
         callToZoomServerForResult(
                 ZoomGlobalState.ZoomServerBaseURL + "/liveness",
@@ -233,7 +233,7 @@ public class NetworkingHelpers {
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getEnrollmentResponseFromZoomServer(ZoomSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getEnrollmentResponseFromZoomServer(FaceTecSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getCommonParameters(zoomSessionResult);
         try {
             parameters.put("enrollmentIdentifier", ZoomGlobalState.randomUsername);
@@ -251,7 +251,7 @@ public class NetworkingHelpers {
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getAuthenticateResponseFromZoomServer(String id, ZoomSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getAuthenticateResponseFromZoomServer(String id, FaceTecSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getAuthenticateParameters(id, zoomSessionResult);
         callToZoomServerForResult(
                 ZoomGlobalState.ZoomServerBaseURL + "/match-3d-3d",
@@ -284,7 +284,7 @@ public class NetworkingHelpers {
     // Makes the actual call to the API.
     // Note that for initial integration this sends to the FaceTec Managed Testing API.
     // After deployment of your own instance of ZoOm Server, this will be your own configurable endpoint.
-    private static void callToZoomServerForResult(String endpoint, JSONObject parameters, ZoomSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback, final FaceTecManagedAPICallback resultCallback)  {
+    private static void callToZoomServerForResult(String endpoint, JSONObject parameters, FaceTecSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback, final FaceTecManagedAPICallback resultCallback)  {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), parameters.toString());
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody,
                 new ProgressRequestBody.Listener() {

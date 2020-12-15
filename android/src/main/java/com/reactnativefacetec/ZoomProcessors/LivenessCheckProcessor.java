@@ -12,14 +12,14 @@ import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.ZoomFaceScanProcessor;
 import com.facetec.sdk.ZoomFaceScanResultCallback;
 import com.facetec.sdk.ZoomSessionActivity;
-import com.facetec.sdk.ZoomSessionResult;
+import com.facetec.sdk.FaceTecSessionResult;
 import com.facetec.sdk.ZoomSessionStatus;
 
 import org.json.JSONObject;
 
 public class LivenessCheckProcessor extends Processor implements ZoomFaceScanProcessor {
     ZoomFaceScanResultCallback ZoomFaceScanResultCallback;
-    ZoomSessionResult latestZoomSessionResult;
+    FaceTecSessionResult latestFaceTecSessionResult;
     SessionTokenSuccessCallback sessionTokenSuccessCallback;
     private boolean _isSuccess = false;
 
@@ -44,8 +44,8 @@ public class LivenessCheckProcessor extends Processor implements ZoomFaceScanPro
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processSessionResultWhileFaceTecSDKWaits(final ZoomSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback) {
-        this.latestZoomSessionResult = zoomSessionResult;
+    public void processSessionResultWhileFaceTecSDKWaits(final FaceTecSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback) {
+        this.latestFaceTecSessionResult = zoomSessionResult;
         this.ZoomFaceScanResultCallback = ZoomFaceScanResultCallback;
 
         // Cancel last request in flight.  This handles case where processing is is taking place but cancellation or Context Switch occurs.
