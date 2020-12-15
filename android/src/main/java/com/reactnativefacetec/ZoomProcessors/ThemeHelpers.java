@@ -38,7 +38,8 @@ public class ThemeHelpers {
       // Overlay Customization
             currentCustomization.getOverlayCustomization().backgroundColor = backgroundColor;
             currentCustomization.getOverlayCustomization().showBrandingImage = true;
-            currentCustomization.getOverlayCustomization().brandingImage = R.color.FaceTec_hint_white;
+      currentCustomization.getOverlayCustomization().brandingImage = 0;
+
             // Guidance Customization
             currentCustomization.getGuidanceCustomization().backgroundColors = backgroundColor;
             currentCustomization.getGuidanceCustomization().foregroundColor = primaryColor;
@@ -180,7 +181,7 @@ public class ThemeHelpers {
        // Overlay Customization
        currentLowLightCustomization.getOverlayCustomization().backgroundColor = backgroundColor;
        currentLowLightCustomization.getOverlayCustomization().showBrandingImage = true;
-       currentLowLightCustomization.getOverlayCustomization().brandingImage = R.color.FaceTec_hint_white;
+       currentLowLightCustomization.getOverlayCustomization().brandingImage = 0;
        // Guidance Customization
        currentLowLightCustomization.getGuidanceCustomization().backgroundColors = backgroundColor;
        currentLowLightCustomization.getGuidanceCustomization().foregroundColor = primaryColor;
