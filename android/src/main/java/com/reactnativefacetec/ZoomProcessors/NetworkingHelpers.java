@@ -95,7 +95,7 @@ public class NetworkingHelpers {
         // Do the network call and handle result
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-                .header("User-Agent", FaceTecSDK.createZoomAPIUserAgentString(""))
+                .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(""))
                 .url(ZoomGlobalState.ZoomServerBaseURL + "/session-token")
                 .get()
                 .build();
@@ -298,7 +298,7 @@ public class NetworkingHelpers {
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .header("Content-Type", "application/json")
                 .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-                .header("User-Agent", FaceTecSDK.createZoomAPIUserAgentString(zoomSessionResult.getSessionId()))
+                .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(zoomSessionResult.getSessionId()))
                 .url(endpoint)
                 .post(progressRequestBody)
                 .build();
@@ -367,7 +367,7 @@ public class NetworkingHelpers {
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .header("Content-Type", "application/json")
                 .header("X-Device-License-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-                .header("User-Agent", FaceTecSDK.createZoomAPIUserAgentString(sessionId))
+                .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(sessionId))
                 .url(endpoint)
                 .post(progressRequestBody)
                 .build();
