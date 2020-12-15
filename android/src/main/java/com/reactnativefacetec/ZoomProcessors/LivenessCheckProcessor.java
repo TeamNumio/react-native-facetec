@@ -11,7 +11,7 @@ import android.content.Context;
 import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
-import com.facetec.sdk.ZoomSessionActivity;
+import com.facetec.sdk.FaceTecSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
 import com.facetec.sdk.FaceTecSessionStatus;
 
@@ -29,7 +29,7 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
             @Override
             public void onResponse(String sessionToken) {
                 // Launch the ZoOm Session.
-                ZoomSessionActivity.createAndLaunchZoomSession(context, LivenessCheckProcessor.this, sessionToken);
+                FaceTecSessionActivity.createAndLaunchZoomSession(context, LivenessCheckProcessor.this, sessionToken);
             }
 
             @Override

@@ -12,7 +12,7 @@ import android.util.Log;
 import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
-import com.facetec.sdk.ZoomSessionActivity;
+import com.facetec.sdk.FaceTecSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
 import com.facetec.sdk.FaceTecSessionStatus;
 
@@ -35,7 +35,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
             @Override
             public void onResponse(String sessionToken) {
                 // Launch the ZoOm Session.
-                ZoomSessionActivity.createAndLaunchZoomSession(context, EnrollmentProcessor.this, sessionToken);
+                FaceTecSessionActivity.createAndLaunchZoomSession(context, EnrollmentProcessor.this, sessionToken);
             }
 
             @Override

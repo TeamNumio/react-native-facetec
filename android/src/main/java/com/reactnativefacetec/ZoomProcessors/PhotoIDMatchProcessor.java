@@ -9,18 +9,11 @@ package com.reactnativefacetec.ZoomProcessors;
 import android.content.Context;
 import android.util.Log;
 
-import com.facetec.sdk.FaceTecIDScanStatus;
+import com.facetec.sdk.*;
 import com.facetec.sdk.ZoomCustomization;
-import com.facetec.sdk.FaceTecFaceScanProcessor;
-import com.facetec.sdk.FaceTecFaceScanResultCallback;
-import com.facetec.sdk.FaceTecIDScanProcessor;
-import com.facetec.sdk.FaceTecIDScanResult;
-import com.facetec.sdk.FaceTecIDScanResultCallback;
 import com.facetec.sdk.ZoomIDScanRetryMode;
 import com.facetec.sdk.ZoomIDScanStatus;
-import com.facetec.sdk.ZoomSessionActivity;
-import com.facetec.sdk.FaceTecSessionResult;
-import com.facetec.sdk.FaceTecSessionStatus;
+import com.facetec.sdk.FaceTecSessionActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +44,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
             @Override
             public void onResponse(String sessionToken) {
                 // Launch the ZoOm Session.
-                ZoomSessionActivity.createAndLaunchZoomSession(context, PhotoIDMatchProcessor.this, PhotoIDMatchProcessor.this, sessionToken);
+                FaceTecSessionActivity.createAndLaunchZoomSession(context, PhotoIDMatchProcessor.this, PhotoIDMatchProcessor.this, sessionToken);
             }
 
             @Override

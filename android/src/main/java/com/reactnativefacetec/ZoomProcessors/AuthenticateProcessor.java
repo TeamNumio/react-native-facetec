@@ -11,7 +11,7 @@ import android.content.Context;
 import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.FaceTecFaceScanProcessor;
 import com.facetec.sdk.FaceTecFaceScanResultCallback;
-import com.facetec.sdk.ZoomSessionActivity;
+import com.facetec.sdk.FaceTecSessionActivity;
 import com.facetec.sdk.FaceTecSessionResult;
 import com.facetec.sdk.FaceTecSessionStatus;
 
@@ -31,7 +31,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
             @Override
             public void onResponse(String sessionToken) {
                 // Launch the ZoOm Session.
-                ZoomSessionActivity.createAndLaunchZoomSession(context, AuthenticateProcessor.this, sessionToken);
+                FaceTecSessionActivity.createAndLaunchZoomSession(context, AuthenticateProcessor.this, sessionToken);
             }
 
             @Override
