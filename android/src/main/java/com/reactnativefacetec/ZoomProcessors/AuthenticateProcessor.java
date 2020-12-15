@@ -46,7 +46,7 @@ public class AuthenticateProcessor extends Processor implements ZoomFaceMapProce
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processZoomSessionResultWhileZoomWaits(final ZoomSessionResult zoomSessionResult, final ZoomFaceMapResultCallback zoomFaceMapResultCallback) {
+    public void processSessionResultWhileFaceTecSDKWaits(final ZoomSessionResult zoomSessionResult, final ZoomFaceMapResultCallback zoomFaceMapResultCallback) {
         this.latestZoomSessionResult = zoomSessionResult;
         this.zoomFaceMapResultCallback = zoomFaceMapResultCallback;
 
