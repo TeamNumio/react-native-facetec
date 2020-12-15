@@ -9,7 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.facetec.sdk.ZoomFaceMapResultCallback;
+import com.facetec.sdk.ZoomFaceScanResultCallback;
 import com.facetec.sdk.ZoomIDScanResult;
 import com.facetec.sdk.ZoomIDScanResultCallback;
 import com.facetec.sdk.ZoomSDK;
@@ -221,19 +221,19 @@ public class NetworkingHelpers {
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getLivenessCheckResponseFromZoomServer(ZoomSessionResult zoomSessionResult, ZoomFaceMapResultCallback zoomFaceMapResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getLivenessCheckResponseFromZoomServer(ZoomSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getCommonParameters(zoomSessionResult);
         callToZoomServerForResult(
                 ZoomGlobalState.ZoomServerBaseURL + "/liveness",
                 parameters,
                 zoomSessionResult,
-                zoomFaceMapResultCallback,
+                ZoomFaceScanResultCallback,
                 resultCallback
         );
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getEnrollmentResponseFromZoomServer(ZoomSessionResult zoomSessionResult, ZoomFaceMapResultCallback zoomFaceMapResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getEnrollmentResponseFromZoomServer(ZoomSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getCommonParameters(zoomSessionResult);
         try {
             parameters.put("enrollmentIdentifier", ZoomGlobalState.randomUsername);
@@ -245,19 +245,19 @@ public class NetworkingHelpers {
                 ZoomGlobalState.ZoomServerBaseURL + "/enrollment",
                 parameters,
                 zoomSessionResult,
-                zoomFaceMapResultCallback,
+                ZoomFaceScanResultCallback,
                 resultCallback
         );
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getAuthenticateResponseFromZoomServer(String id, ZoomSessionResult zoomSessionResult, ZoomFaceMapResultCallback zoomFaceMapResultCallback, FaceTecManagedAPICallback resultCallback ) {
+    public static void getAuthenticateResponseFromZoomServer(String id, ZoomSessionResult zoomSessionResult, ZoomFaceScanResultCallback ZoomFaceScanResultCallback, FaceTecManagedAPICallback resultCallback ) {
         JSONObject parameters = getAuthenticateParameters(id, zoomSessionResult);
         callToZoomServerForResult(
                 ZoomGlobalState.ZoomServerBaseURL + "/match-3d-3d",
                 parameters,
                 zoomSessionResult,
-                zoomFaceMapResultCallback,
+                ZoomFaceScanResultCallback,
                 resultCallback
         );
     }
@@ -284,14 +284,14 @@ public class NetworkingHelpers {
     // Makes the actual call to the API.
     // Note that for initial integration this sends to the FaceTec Managed Testing API.
     // After deployment of your own instance of ZoOm Server, this will be your own configurable endpoint.
-    private static void callToZoomServerForResult(String endpoint, JSONObject parameters, ZoomSessionResult zoomSessionResult, final ZoomFaceMapResultCallback zoomFaceMapResultCallback, final FaceTecManagedAPICallback resultCallback)  {
+    private static void callToZoomServerForResult(String endpoint, JSONObject parameters, ZoomSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback, final FaceTecManagedAPICallback resultCallback)  {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), parameters.toString());
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody,
                 new ProgressRequestBody.Listener() {
                     @Override
                     public void onUploadProgressChanged(long bytesWritten, long totalBytes) {
                         final float uploadProgressPercent = ((float)bytesWritten) / ((float)totalBytes);
-                        zoomFaceMapResultCallback.uploadProgress(uploadProgressPercent);
+                        ZoomFaceScanResultCallback.uploadProgress(uploadProgressPercent);
                     }
                 });
         // Do the network call and handle result
@@ -312,7 +312,7 @@ public class NetworkingHelpers {
 
                 // If this comes from HTTPS cancel call, don't set the sub code to NETWORK_ERROR.
                 if(!e.getMessage().equals(OK_HTTP_RESPONSE_CANCELED)) {
-                    zoomFaceMapResultCallback.cancel();
+                    ZoomFaceScanResultCallback.cancel();
                 }
             }
 
@@ -328,7 +328,7 @@ public class NetworkingHelpers {
                 catch(JSONException e) {
                     e.printStackTrace();
                     Log.d("ZoomSDK", "Exception raised while attempting to parse JSON result.");
-                    zoomFaceMapResultCallback.cancel();
+                    ZoomFaceScanResultCallback.cancel();
                 }
             }
         });
@@ -339,10 +339,10 @@ public class NetworkingHelpers {
         longUploadHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(zoomFaceMapResultCallback == null || !requestInProgress) {
+                if(ZoomFaceScanResultCallback == null || !requestInProgress) {
                     return;
                 }
-                zoomFaceMapResultCallback.uploadMessageOverride("Still Uploading...");
+                ZoomFaceScanResultCallback.uploadMessageOverride("Still Uploading...");
             }
         }, 6000);
 

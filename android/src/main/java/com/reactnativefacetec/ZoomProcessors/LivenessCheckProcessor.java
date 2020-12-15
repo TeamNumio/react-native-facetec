@@ -9,16 +9,16 @@ package com.reactnativefacetec.ZoomProcessors;
 import android.content.Context;
 
 import com.facetec.sdk.ZoomCustomization;
-import com.facetec.sdk.ZoomFaceMapProcessor;
-import com.facetec.sdk.ZoomFaceMapResultCallback;
+import com.facetec.sdk.ZoomFaceScanProcessor;
+import com.facetec.sdk.ZoomFaceScanResultCallback;
 import com.facetec.sdk.ZoomSessionActivity;
 import com.facetec.sdk.ZoomSessionResult;
 import com.facetec.sdk.ZoomSessionStatus;
 
 import org.json.JSONObject;
 
-public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProcessor {
-    ZoomFaceMapResultCallback zoomFaceMapResultCallback;
+public class LivenessCheckProcessor extends Processor implements ZoomFaceScanProcessor {
+    ZoomFaceScanResultCallback ZoomFaceScanResultCallback;
     ZoomSessionResult latestZoomSessionResult;
     SessionTokenSuccessCallback sessionTokenSuccessCallback;
     private boolean _isSuccess = false;
@@ -44,9 +44,9 @@ public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProc
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processSessionResultWhileFaceTecSDKWaits(final ZoomSessionResult zoomSessionResult, final ZoomFaceMapResultCallback zoomFaceMapResultCallback) {
+    public void processSessionResultWhileFaceTecSDKWaits(final ZoomSessionResult zoomSessionResult, final ZoomFaceScanResultCallback ZoomFaceScanResultCallback) {
         this.latestZoomSessionResult = zoomSessionResult;
-        this.zoomFaceMapResultCallback = zoomFaceMapResultCallback;
+        this.ZoomFaceScanResultCallback = ZoomFaceScanResultCallback;
 
         // Cancel last request in flight.  This handles case where processing is is taking place but cancellation or Context Switch occurs.
         // Our handling here ends the latest in flight request and simply re-does the normal logic, which will cancel out.
@@ -54,13 +54,13 @@ public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProc
 
         // cancellation, timeout, etc.
         if (zoomSessionResult.getStatus() != ZoomSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
-            zoomFaceMapResultCallback.cancel();
-            this.zoomFaceMapResultCallback = null;
+            ZoomFaceScanResultCallback.cancel();
+            this.ZoomFaceScanResultCallback = null;
             return;
         }
 
         // Create and parse request to ZoOm Server.
-        NetworkingHelpers.getLivenessCheckResponseFromZoomServer(zoomSessionResult, this.zoomFaceMapResultCallback, new FaceTecManagedAPICallback() {
+        NetworkingHelpers.getLivenessCheckResponseFromZoomServer(zoomSessionResult, this.ZoomFaceScanResultCallback, new FaceTecManagedAPICallback() {
             @Override
             public void onResponse(JSONObject responseJSON) {
                 UXNextStep nextStep = ServerResultHelpers.getLivenessNextStep(responseJSON);
@@ -69,13 +69,13 @@ public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProc
                     _isSuccess = true;
                     sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
                     ZoomCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
-                    zoomFaceMapResultCallback.succeed();
+                    ZoomFaceScanResultCallback.succeed();
                 }
                 else if (nextStep == UXNextStep.Retry) {
-                    zoomFaceMapResultCallback.retry();
+                    ZoomFaceScanResultCallback.retry();
                 }
                 else {
-                    zoomFaceMapResultCallback.cancel();
+                    ZoomFaceScanResultCallback.cancel();
                 }
             }
         });
