@@ -13,8 +13,8 @@ import com.facetec.sdk.ZoomCustomization;
 import com.facetec.sdk.ZoomFaceScanProcessor;
 import com.facetec.sdk.ZoomFaceScanResultCallback;
 import com.facetec.sdk.ZoomIDScanProcessor;
-import com.facetec.sdk.ZoomIDScanResult;
-import com.facetec.sdk.ZoomIDScanResultCallback;
+import com.facetec.sdk.FaceTecIDScanResult;
+import com.facetec.sdk.FaceTecIDScanResultCallback;
 import com.facetec.sdk.ZoomIDScanRetryMode;
 import com.facetec.sdk.ZoomIDScanStatus;
 import com.facetec.sdk.ZoomSessionActivity;
@@ -30,8 +30,8 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProc
     ZoomFaceScanResultCallback ZoomFaceScanResultCallback;
     FaceTecSessionResult latestFaceTecSessionResult;
 
-    ZoomIDScanResultCallback zoomIDScanResultCallback;
-    ZoomIDScanResult latestZoomIDScanResult;
+    FaceTecIDScanResultCallback zoomIDScanResultCallback;
+    FaceTecIDScanResult latestFaceTecIDScanResult;
     private boolean _isSuccess = false;
     SessionTokenSuccessCallback sessionTokenSuccessCallback;
     SessionTokenErrorCallback sessionTokenErrorCallback;
@@ -102,8 +102,8 @@ public class PhotoIDMatchProcessor extends Processor implements ZoomFaceScanProc
     }
 
     // Required function that handles calling ZoOm Server to get result and decides how to continue.
-    public void processIDScanResultWhileFaceTecSDKWaits(ZoomIDScanResult zoomIDScanResult, final ZoomIDScanResultCallback zoomIDScanResultCallback) {
-        this.latestZoomIDScanResult = zoomIDScanResult;
+    public void processIDScanResultWhileFaceTecSDKWaits(FaceTecIDScanResult zoomIDScanResult, final FaceTecIDScanResultCallback zoomIDScanResultCallback) {
+        this.latestFaceTecIDScanResult = zoomIDScanResult;
         this.zoomIDScanResultCallback = zoomIDScanResultCallback;
 
         Log.i("PhotoIDMatchProcessor", "zoomIDScanResult == zoomIDScanResult Not " + zoomIDScanResult);

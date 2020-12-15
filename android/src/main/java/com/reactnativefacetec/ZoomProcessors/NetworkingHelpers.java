@@ -10,8 +10,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.facetec.sdk.ZoomFaceScanResultCallback;
-import com.facetec.sdk.ZoomIDScanResult;
-import com.facetec.sdk.ZoomIDScanResultCallback;
+import com.facetec.sdk.FaceTecIDScanResult;
+import com.facetec.sdk.FaceTecIDScanResultCallback;
 import com.facetec.sdk.FaceTecSDK;
 import com.facetec.sdk.FaceTecSessionResult;
 
@@ -194,7 +194,7 @@ public class NetworkingHelpers {
     }
 
     // Set up parameters needed to communicate to the API for Photo ID Match.
-    public static JSONObject getPhotoIDParameters(String id, ZoomIDScanResult zoomIDScanResult) {
+    public static JSONObject getPhotoIDParameters(String id, FaceTecIDScanResult zoomIDScanResult) {
         String zoomIDScanBase64 = zoomIDScanResult.getIDScanMetrics().getIDScanBase64();
         String sessionId = zoomIDScanResult.getIDScanMetrics().getSessionId();
         JSONObject parameters = new JSONObject();
@@ -263,7 +263,7 @@ public class NetworkingHelpers {
     }
 
     // Create and send the request.  Parse the results and send the caller what the next step should be (Succeed, Retry, or Cancel).
-    public static void getPhotoIDMatchResponseFromZoomServer(String id, ZoomIDScanResult zoomIDScanResult, ZoomIDScanResultCallback zoomIDScanResultCallback, FaceTecManagedAPICallback resultCallback ){
+    public static void getPhotoIDMatchResponseFromZoomServer(String id, FaceTecIDScanResult zoomIDScanResult, FaceTecIDScanResultCallback zoomIDScanResultCallback, FaceTecManagedAPICallback resultCallback ){
         JSONObject parameters = getPhotoIDParameters(id, zoomIDScanResult);
         callFaceTecManagedAPIForIDCheck(
                 ZoomGlobalState.ZoomServerBaseURL + "/id-check",
@@ -351,7 +351,7 @@ public class NetworkingHelpers {
     // Makes the actual call to the API.
     // Note that for initial integration this sends to the FaceTec Managed Testing API.
     // After deployment of your own instance of ZoOm Server, this will be your own configurable endpoint.
-    private static void callFaceTecManagedAPIForIDCheck(String endpoint, JSONObject parameters, ZoomIDScanResult zoomIDScanResult, final ZoomIDScanResultCallback zoomIDScanResultCallback, final FaceTecManagedAPICallback resultCallback) {
+    private static void callFaceTecManagedAPIForIDCheck(String endpoint, JSONObject parameters, FaceTecIDScanResult zoomIDScanResult, final FaceTecIDScanResultCallback zoomIDScanResultCallback, final FaceTecManagedAPICallback resultCallback) {
         String sessionId = zoomIDScanResult.getIDScanMetrics().getSessionId();
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), parameters.toString());
