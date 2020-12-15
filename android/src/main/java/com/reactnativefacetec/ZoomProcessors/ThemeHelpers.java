@@ -28,7 +28,7 @@ public class ThemeHelpers {
     public FaceTecCustomization getCustomizationForTheme(String theme) {
         FaceTecCustomization currentCustomization = new FaceTecCustomization();
 
-        int[] retryScreenSlideshowImages = new int[]{R.drawable.FaceTec_ideal_1, R.drawable.FaceTec_ideal_2, R.drawable.FaceTec_ideal_3, R.drawable.FaceTec_ideal_4, R.drawable.FaceTec_ideal_5};
+      int[] retryScreenSlideshowImages = new int[]{R.drawable.ideal_image_1, R.drawable.ideal_image_2, R.drawable.ideal_image_3, R.drawable.ideal_image_4, R.drawable.ideal_image_5};
 
             int primaryColor = Color.parseColor("#1797E3"); // white
             int backgroundColor = Color.parseColor("#FFFFFF"); // navy
@@ -175,7 +175,7 @@ public class ThemeHelpers {
        int backgroundColor = Color.parseColor("#FFFFFF"); // navy
        int numio = Color.parseColor("#42C560");
        int buttonText = Color.parseColor("#414141");
-       int[] retryScreenSlideshowImages = new int[]{R.drawable.FaceTec_ideal_1, R.drawable.FaceTec_ideal_2, R.drawable.FaceTec_ideal_3, R.drawable.FaceTec_ideal_4, R.drawable.FaceTec_ideal_5};
+       int[] retryScreenSlideshowImages = new int[]{R.drawable.ideal_image_1, R.drawable.ideal_image_2, R.drawable.ideal_image_3, R.drawable.ideal_image_4, R.drawable.ideal_image_5};
 
        // Overlay Customization
        currentLowLightCustomization.getOverlayCustomization().backgroundColor = backgroundColor;
