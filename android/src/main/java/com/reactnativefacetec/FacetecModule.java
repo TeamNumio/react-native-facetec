@@ -16,8 +16,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facetec.sdk.FaceTecCustomization;
-import com.facetec.sdk.ZoomGuidanceCustomization;
 import com.facetec.sdk.FaceTecSDK;
 import com.reactnativefacetec.ZoomProcessors.AuthenticateProcessor;
 import com.reactnativefacetec.ZoomProcessors.EnrollmentProcessor;
@@ -28,7 +26,6 @@ import com.reactnativefacetec.ZoomProcessors.ZoomGlobalState;
 import com.reactnativefacetec.ZoomProcessors.PhotoIDMatchProcessor;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class FacetecModule extends ReactContextBaseJavaModule {
@@ -76,7 +73,9 @@ public class FacetecModule extends ReactContextBaseJavaModule {
     this.onSuccess = onSuccess;
     this.onFail = onFail;
 
-    FaceTecSDK.initialize(
+
+    // NOTE: Previously just initialize
+    FaceTecSDK.initializeInDevelopmentMode(
       reactContext,
       ZoomGlobalState.DeviceLicenseKeyIdentifier,
       ZoomGlobalState.PublicFaceScanEncryptionKey,
