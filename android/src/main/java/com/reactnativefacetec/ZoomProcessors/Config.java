@@ -9,7 +9,7 @@ import android.content.Context;
 import android.graphics.Color;
 
 import com.facetec.sampleapp.BuildConfig;
-import com.facetec.sampleapp.R;
+import com.reactnativefacetec.R;
 import com.facetec.sdk.*;
 
 public class Config {
@@ -17,7 +17,7 @@ public class Config {
     // REQUIRED
     // Available at https://dev.facetec.com/#/account
     // NOTE: This field is auto-populated by the FaceTec SDK Configuration Wizard.
-    public static String DeviceKeyIdentifier = "dTQ1jhLOgQceDXaVWUA5oButAKbHcSou";
+    public static String DeviceKeyIdentifier = "dbAJm57lOvJ0ViuYtpWOIsUhsGxMTv3c";
 
     // -------------------------------------
     // REQUIRED
@@ -160,5 +160,7 @@ public class Config {
     // and choosing this option will set the FaceTec SDK UI/UX Customizations to the Customizations that you selected in the
     // Configuration Wizard.
     public static boolean wasSDKConfiguredWithConfigWizard = true;
+
+    public static String randomUsername = "";
 
 }
