@@ -35,7 +35,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
             @Override
             public void onResponse(String sessionToken) {
                 // Launch the ZoOm Session.
-                FaceTecSessionActivity.createAndLaunchZoomSession(context, EnrollmentProcessor.this, sessionToken);
+                FaceTecSessionActivity.createAndLaunchSession(context, EnrollmentProcessor.this, sessionToken);
             }
 
             @Override

@@ -44,7 +44,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
             @Override
             public void onResponse(String sessionToken) {
                 // Launch the ZoOm Session.
-                FaceTecSessionActivity.createAndLaunchZoomSession(context, PhotoIDMatchProcessor.this, PhotoIDMatchProcessor.this, sessionToken);
+                FaceTecSessionActivity.createAndLaunchSession(context, PhotoIDMatchProcessor.this, PhotoIDMatchProcessor.this, sessionToken);
             }
 
             @Override

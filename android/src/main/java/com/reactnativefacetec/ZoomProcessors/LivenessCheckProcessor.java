@@ -29,7 +29,7 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
             @Override
             public void onResponse(String sessionToken) {
                 // Launch the ZoOm Session.
-                FaceTecSessionActivity.createAndLaunchZoomSession(context, LivenessCheckProcessor.this, sessionToken);
+                FaceTecSessionActivity.createAndLaunchSession(context, LivenessCheckProcessor.this, sessionToken);
             }
 
             @Override

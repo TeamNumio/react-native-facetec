@@ -31,7 +31,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
             @Override
             public void onResponse(String sessionToken) {
                 // Launch the ZoOm Session.
-                FaceTecSessionActivity.createAndLaunchZoomSession(context, AuthenticateProcessor.this, sessionToken);
+                FaceTecSessionActivity.createAndLaunchSession(context, AuthenticateProcessor.this, sessionToken);
             }
 
             @Override
