@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 
-import com.facetec.sampleapp.SampleAppActivity;
+import com.reactnativefacetec.SampleAppActivity;
 import com.facetec.sdk.*;
 
 // This is an example self-contained class to perform Authentication with the FaceTec SDK.

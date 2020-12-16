@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.facetec.sampleapp.SampleAppActivity;
+import com.reactnativefacetec.SampleAppActivity;
 import com.facetec.sdk.*;
 
 // This is an example self-contained class to perform Enrollment with the FaceTec SDK.

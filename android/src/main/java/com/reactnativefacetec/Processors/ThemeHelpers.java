@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
-import com.facetec.sampleapp.R;
+import com.reactnativefacetec.R;
 import com.facetec.sdk.FaceTecCancelButtonCustomization;
 import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.FaceTecSDK;

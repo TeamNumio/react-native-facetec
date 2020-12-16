@@ -8,8 +8,8 @@ package com.reactnativefacetec.Processors;
 import android.content.Context;
 import android.graphics.Color;
 
-import com.facetec.sampleapp.BuildConfig;
-import com.facetec.sampleapp.R;
+import com.reactnativefacetec.BuildConfig;
+import com.reactnativefacetec.R;
 import com.facetec.sdk.*;
 
 public class Config {
