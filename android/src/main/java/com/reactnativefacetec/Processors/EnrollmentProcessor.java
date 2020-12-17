@@ -26,9 +26,13 @@ import com.facetec.sdk.*;
 // Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class EnrollmentProcessor extends Processor implements FaceTecFaceScanProcessor {
   private boolean isSuccess = false;
+  String id;
+
 //    private SampleAppActivity sampleAppActivity;
 
-  public EnrollmentProcessor(String sessionToken, Context context) {
+  public EnrollmentProcessor(String id, String sessionToken, Context context) {
+    this.id = id;
+
 //        this.sampleAppActivity = (SampleAppActivity) context;
 
     //
@@ -69,7 +73,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
       parameters.put("faceScan", sessionResult.getFaceScanBase64());
       parameters.put("auditTrailImage", sessionResult.getAuditTrailCompressedBase64()[0]);
       parameters.put("lowQualityAuditTrailImage", sessionResult.getLowQualityAuditTrailCompressedBase64()[0]);
-//            parameters.put("externalDatabaseRefID", sampleAppActivity.getLatestExternalDatabaseRefID());
+      parameters.put("externalDatabaseRefID", id);
     } catch (JSONException e) {
       e.printStackTrace();
       Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to create JSON payload for upload.");

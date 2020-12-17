@@ -27,9 +27,11 @@ import com.facetec.sdk.*;
 // Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanProcessor, FaceTecIDScanProcessor {
   private boolean isSuccess = false;
+  String id;
   // private SampleAppActivity sampleAppActivity;
 
-  public PhotoIDMatchProcessor(String sessionToken, Context context) {
+  public PhotoIDMatchProcessor(String id, String sessionToken, Context context) {
+    this.id = id;
     // this.sampleAppActivity = (SampleAppActivity) context;
 
     //
@@ -70,7 +72,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       parameters.put("faceScan", sessionResult.getFaceScanBase64());
       parameters.put("auditTrailImage", sessionResult.getAuditTrailCompressedBase64()[0]);
       parameters.put("lowQualityAuditTrailImage", sessionResult.getLowQualityAuditTrailCompressedBase64()[0]);
-      parameters.put("externalDatabaseRefID", sampleAppActivity.getLatestExternalDatabaseRefID());
+      parameters.put("externalDatabaseRefID", id);
     } catch (JSONException e) {
       e.printStackTrace();
       Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to create JSON payload for upload.");
@@ -174,7 +176,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
     // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
     //
-    sampleAppActivity.setLatestIDScanResult(idScanResult);
+//    sampleAppActivity.setLatestIDScanResult(idScanResult);
 
     //
     // Part 2:  Handles early exit scenarios where there is no IDScan to handle -- i.e. User Cancellation, Timeouts, etc.
@@ -199,7 +201,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     //
     JSONObject parameters = new JSONObject();
     try {
-      parameters.put("externalDatabaseRefID", sampleAppActivity.getLatestExternalDatabaseRefID());
+      parameters.put("externalDatabaseRefID", id);
       parameters.put("idScan", idScanResult.getIDScanBase64());
       parameters.put("minMatchLevel", minMatchLevel);
 
