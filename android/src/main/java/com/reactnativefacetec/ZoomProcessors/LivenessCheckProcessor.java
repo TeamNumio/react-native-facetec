@@ -8,18 +8,18 @@ package com.reactnativefacetec.ZoomProcessors;
 
 import android.content.Context;
 
-import com.facetec.zoom.sdk.ZoomCustomization;
-import com.facetec.zoom.sdk.ZoomFaceMapProcessor;
-import com.facetec.zoom.sdk.ZoomFaceMapResultCallback;
-import com.facetec.zoom.sdk.ZoomSessionActivity;
-import com.facetec.zoom.sdk.ZoomSessionResult;
-import com.facetec.zoom.sdk.ZoomSessionStatus;
+import com.facetec.sdk.FaceTecCustomization;
+import com.facetec.sdk.FaceTecFaceScanProcessor;
+import com.facetec.sdk.FaceTecFaceScanResultCallback;
+import com.facetec.sdk.FaceTecSessionActivity;
+import com.facetec.sdk.FaceTecSessionResult;
+import com.facetec.sdk.FaceTecSessionStatus;
 
 import org.json.JSONObject;
 
-public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProcessor {
-  ZoomFaceMapResultCallback zoomFaceMapResultCallback;
-  ZoomSessionResult latestZoomSessionResult;
+public class LivenessCheckProcessor extends Processor implements FaceTecFaceScanProcessor {
+  FaceTecFaceScanResultCallback zoomFaceMapResultCallback;
+  FaceTecSessionResult latestZoomSessionResult;
   SessionTokenSuccessCallback sessionTokenSuccessCallback;
   private boolean _isSuccess = false;
 
@@ -29,7 +29,7 @@ public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProc
       @Override
       public void onResponse(String sessionToken) {
         // Launch the ZoOm Session.
-        ZoomSessionActivity.createAndLaunchZoomSession(context, LivenessCheckProcessor.this, sessionToken);
+        FaceTecSessionActivity.createAndLaunchZoomSession(context, LivenessCheckProcessor.this, sessionToken);
       }
 
       @Override
@@ -44,7 +44,7 @@ public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProc
   }
 
   // Required function that handles calling ZoOm Server to get result and decides how to continue.
-  public void processZoomSessionResultWhileZoomWaits(final ZoomSessionResult zoomSessionResult, final ZoomFaceMapResultCallback zoomFaceMapResultCallback) {
+  public void processZoomSessionResultWhileZoomWaits(final FaceTecSessionResult zoomSessionResult, final FaceTecFaceScanResultCallback zoomFaceMapResultCallback) {
     this.latestZoomSessionResult = zoomSessionResult;
     this.zoomFaceMapResultCallback = zoomFaceMapResultCallback;
 
@@ -53,7 +53,7 @@ public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProc
     NetworkingHelpers.cancelPendingRequests();
 
     // cancellation, timeout, etc.
-    if (zoomSessionResult.getStatus() != ZoomSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
+    if (zoomSessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
       zoomFaceMapResultCallback.cancel();
       this.zoomFaceMapResultCallback = null;
       return;
@@ -68,7 +68,7 @@ public class LivenessCheckProcessor extends Processor implements ZoomFaceMapProc
         if (nextStep == UXNextStep.Succeed) {
           _isSuccess = true;
           sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
-          ZoomCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
+          FaceTecCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
           zoomFaceMapResultCallback.succeed();
         } else if (nextStep == UXNextStep.Retry) {
           zoomFaceMapResultCallback.retry();
