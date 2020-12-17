@@ -18,6 +18,8 @@ import java.io.IOException;
 
 // import com.reactnativefacetec.SampleAppActivity;
 import com.facetec.sdk.*;
+import com.facetec.sdk.FaceTecSessionResult;
+
 
 // This is an example self-contained class to perform Authentication with the FaceTec SDK.
 // You may choose to further componentize parts of this in your own Apps based on your specific requirements.
@@ -26,10 +28,14 @@ import com.facetec.sdk.*;
 // Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class AuthenticateProcessor extends Processor implements FaceTecFaceScanProcessor {
   private boolean isSuccess = false;
+  FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
+  FaceTecSessionResult latestFaceTecSessionResult;
+  SessionTokenSuccessCallback sessionTokenSuccessCallback;
   String id;
 //    private SampleAppActivity sampleAppActivity;
 
-  public AuthenticateProcessor(String id, String sessionToken, Context context) {
+  public AuthenticateProcessor(String id, String sessionToken, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
+    this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
     this.id = id;
     //        this.sampleAppActivity = (SampleAppActivity) context;
 
@@ -41,6 +47,18 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
     // - FaceTecFaceScanProcessor:  A class that implements FaceTecFaceScanProcessor, which handles the FaceScan when the User completes a Session.  In this example, "self" implements the class.
     // - sessionToken:  A valid Session Token you just created by calling your API to get a Session Token from the Server SDK.
     //
+    NetworkingHelpers.getSessionToken(new NetworkingHelpers.SessionTokenCallback() {
+      @Override
+      public void onResponse(String sessionToken) {
+        // Launch the ZoOm Session.
+        FaceTecSessionActivity.createAndLaunchSession(context, AuthenticateProcessor.this, sessionToken);
+      }
+
+      @Override
+      public void onError() {
+        sessionTokenErrorCallback.onError("AuthenticateProcessor");
+      }
+    });
     FaceTecSessionActivity.createAndLaunchSession(context, AuthenticateProcessor.this, sessionToken);
   }
 
@@ -48,6 +66,8 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
   // Part 2:  Handling the Result of a FaceScan
   //
   public void processSessionWhileFaceTecSDKWaits(final FaceTecSessionResult sessionResult, final FaceTecFaceScanResultCallback faceScanResultCallback) {
+    this.latestFaceTecSessionResult = sessionResult;
+    this.FaceTecFaceScanResultCallback = faceScanResultCallback;
     //
     // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
     // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
@@ -60,6 +80,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
     if (sessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
+      this.FaceTecFaceScanResultCallback = null;
       return;
     }
 
@@ -123,7 +144,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
             // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
             //
             isSuccess = true;
-
+            sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
             FaceTecCustomization.overrideResultScreenSuccessMessage = "Authenticated";
             faceScanResultCallback.succeed();
           } else if (didSucceed == false) {

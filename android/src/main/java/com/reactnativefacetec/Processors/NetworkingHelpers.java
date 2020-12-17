@@ -32,11 +32,13 @@ import javax.net.ssl.SSLSocketFactory;
 
 import com.facetec.sdk.*;
 
-interface SessionTokenCallback {
-  void onResponse(String sessionToken);
-  void onError();
-}
+
 public class NetworkingHelpers {
+  interface SessionTokenCallback {
+    void onResponse(String sessionToken);
+    void onError();
+  }
+
   private static OkHttpClient _apiClient = null;
 
   private static OkHttpClient createApiClient() {
@@ -73,7 +75,7 @@ public class NetworkingHelpers {
     }
     return _apiClient;
   }
-  public void getSessionToken(final SessionTokenCallback sessionTokenCallback) {
+  public static void getSessionToken(final SessionTokenCallback sessionTokenCallback) {
 
     // Do the network call and handle result
     okhttp3.Request request = new okhttp3.Request.Builder()

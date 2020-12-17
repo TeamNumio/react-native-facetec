@@ -25,10 +25,13 @@ import com.facetec.sdk.*;
 // Android Note 1:  Some commented "Parts" below are out of order so that they can match iOS and Browser source for this same file on those platforms.
 // Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class LivenessCheckProcessor extends Processor implements FaceTecFaceScanProcessor {
+  FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
+  FaceTecSessionResult latestFaceTecSessionResult;
+  SessionTokenSuccessCallback sessionTokenSuccessCallback;
   private boolean isSuccess = false;
   // private SampleAppActivity sampleAppActivity;
 
-  public LivenessCheckProcessor(String sessionToken, Context context) {
+  public LivenessCheckProcessor(String sessionToken, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
     // this.sampleAppActivity = (SampleAppActivity) context;
 
     //
@@ -130,7 +133,7 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
             // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
             //
             isSuccess = true;
-
+            sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
             FaceTecCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
             faceScanResultCallback.succeed();
           } else if (didSucceed == false) {

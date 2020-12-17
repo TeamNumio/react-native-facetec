@@ -25,12 +25,15 @@ import com.facetec.sdk.*;
 // Android Note 1:  Some commented "Parts" below are out of order so that they can match iOS and Browser source for this same file on those platforms.
 // Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class EnrollmentProcessor extends Processor implements FaceTecFaceScanProcessor {
+  FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
+  FaceTecSessionResult latestFaceTecSessionResult;
+  SessionTokenSuccessCallback sessionTokenSuccessCallback;
   private boolean isSuccess = false;
   String id;
 
 //    private SampleAppActivity sampleAppActivity;
 
-  public EnrollmentProcessor(String id, String sessionToken, Context context) {
+  public EnrollmentProcessor(String id, String sessionToken, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
     this.id = id;
 
 //        this.sampleAppActivity = (SampleAppActivity) context;
@@ -50,6 +53,8 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
   // Part 2:  Handling the Result of a FaceScan
   //
   public void processSessionWhileFaceTecSDKWaits(final FaceTecSessionResult sessionResult, final FaceTecFaceScanResultCallback faceScanResultCallback) {
+    this.latestFaceTecSessionResult = sessionResult;
+    this.FaceTecFaceScanResultCallback = faceScanResultCallback;
     //
     // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
     // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
@@ -62,6 +67,7 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
     if (sessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
+      this.FaceTecFaceScanResultCallback = null;
       return;
     }
 
@@ -135,6 +141,12 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
 
             // Demonstrates dynamically setting the Success Screen Message.
             FaceTecCustomization.overrideResultScreenSuccessMessage = "Enrollment\nSucceeded";
+            try {
+              sessionTokenSuccessCallback.onSuccess(responseJSON.getJSONObject("data").toString());
+            } catch (JSONException e) {
+              sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
+              e.printStackTrace();
+            }
             faceScanResultCallback.succeed();
           } else if (didSucceed == false) {
             // CASE:  In our Sample code, "success" being present and false means that the User Needs to Retry.

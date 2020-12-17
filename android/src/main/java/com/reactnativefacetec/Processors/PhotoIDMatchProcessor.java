@@ -26,11 +26,19 @@ import com.facetec.sdk.*;
 // Android Note 1:  Some commented "Parts" below are out of order so that they can match iOS and Browser source for this same file on those platforms.
 // Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanProcessor, FaceTecIDScanProcessor {
+  FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
+  FaceTecSessionResult latestFaceTecSessionResult;
+  FaceTecIDScanResultCallback idScanResultCallback;
+  FaceTecIDScanResult latestFaceTecIDScanResult;
+  SessionTokenSuccessCallback sessionTokenSuccessCallback;
+  SessionTokenErrorCallback sessionTokenErrorCallback;
   private boolean isSuccess = false;
   String id;
   // private SampleAppActivity sampleAppActivity;
 
-  public PhotoIDMatchProcessor(String id, String sessionToken, Context context) {
+  public PhotoIDMatchProcessor(String id, String sessionToken, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
+    this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
+    this.sessionTokenErrorCallback = sessionTokenErrorCallback;
     this.id = id;
     // this.sampleAppActivity = (SampleAppActivity) context;
 
@@ -49,6 +57,8 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
   // Part 2:  Handling the Result of a FaceScan
   //
   public void processSessionWhileFaceTecSDKWaits(final FaceTecSessionResult sessionResult, final FaceTecFaceScanResultCallback faceScanResultCallback) {
+    this.latestFaceTecSessionResult = sessionResult;
+    this.FaceTecFaceScanResultCallback = faceScanResultCallback;
     //
     // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
     // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
@@ -61,6 +71,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     if (sessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
+      this.FaceTecFaceScanResultCallback = null;
       return;
     }
 
@@ -137,12 +148,15 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           } else {
             // CASE:  UNEXPECTED response from API.  Our Sample Code keys of a success boolean on the root of the JSON object --> You define your own API contracts with yourself and may choose to do something different here based on the error.
             faceScanResultCallback.cancel();
+            FaceTecFaceScanResultCallback = null;
+
           }
         } catch (JSONException e) {
           // CASE:  Parsing the response into JSON failed --> You define your own API contracts with yourself and may choose to do something different here based on the error.  Solid server-side code should ensure you don't get to this case.
           e.printStackTrace();
           Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to parse JSON result.");
           faceScanResultCallback.cancel();
+          FaceTecFaceScanResultCallback = null;
         }
       }
 
@@ -151,6 +165,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
         // CASE:  Network Request itself is erroring --> You define your own API contracts with yourself and may choose to do something different here based on the error.
         Log.d("FaceTecSDKSampleApp", "Exception raised while attempting HTTPS call.");
         faceScanResultCallback.cancel();
+        FaceTecFaceScanResultCallback = null;
       }
     });
 
@@ -172,6 +187,8 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
   // Part 1:  Handling the Result of an IDScan
   //
   public void processIDScanWhileFaceTecSDKWaits(final FaceTecIDScanResult idScanResult, final FaceTecIDScanResultCallback idScanResultCallback) {
+    this.latestFaceTecIDScanResult = idScanResult;
+    this.idScanResultCallback = idScanResultCallback;
     //
     // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
     // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
@@ -184,6 +201,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     if (idScanResult.getStatus() != FaceTecIDScanStatus.SUCCESS) {
       NetworkingHelpers.cancelPendingRequests();
       idScanResultCallback.cancel();
+      this.idScanResultCallback = null;
       return;
     }
 
@@ -216,6 +234,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     } catch (JSONException e) {
       e.printStackTrace();
       Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to create JSON payload for upload.");
+      this.idScanResultCallback = null;
     }
 
     //
@@ -277,6 +296,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
             FaceTecCustomization.overrideResultScreenSuccessMessage = "Your 3D Face\nMatched Your ID";
             idScanResultCallback.succeed();
           } else if (didSucceed == false) {
+
             // CASE:  In our Sample code, "success" being present and false means that the User Needs to Retry.
             // Real Users will likely succeed on subsequent attempts after following on-screen guidance.
             // Attackers/Fraudsters will continue to get rejected.
