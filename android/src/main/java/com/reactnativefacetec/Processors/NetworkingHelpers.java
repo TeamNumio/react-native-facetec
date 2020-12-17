@@ -3,6 +3,7 @@ package com.reactnativefacetec.Processors;
 
 import android.os.Build;
 import androidx.annotation.NonNull;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,14 +18,24 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.Callback;
 import okhttp3.RequestBody;
 import okio.BufferedSink;
 import okio.Okio;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import com.facetec.sdk.*;
+
+interface SessionTokenCallback {
+  void onResponse(String sessionToken);
+  void onError();
+}
 public class NetworkingHelpers {
   private static OkHttpClient _apiClient = null;
 
@@ -61,6 +72,48 @@ public class NetworkingHelpers {
       _apiClient = createApiClient();
     }
     return _apiClient;
+  }
+  public void getSessionToken(final SessionTokenCallback sessionTokenCallback) {
+
+    // Do the network call and handle result
+    okhttp3.Request request = new okhttp3.Request.Builder()
+      .header("X-Device-Key", Config.DeviceKeyIdentifier)
+      .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(""))
+      .url(Config.BaseURL + "/session-token")
+      .get()
+      .build();
+
+    NetworkingHelpers.getApiClient().newCall(request).enqueue(new Callback() {
+      @Override
+      public void onFailure(Call call, IOException e) {
+        e.printStackTrace();
+        Log.d("FaceTecSDKSampleApp", "Exception raised while attempting HTTPS call.");
+
+        // If this comes from HTTPS cancel call, don't set the sub code to NETWORK_ERROR.
+        if(!e.getMessage().equals(NetworkingHelpers.OK_HTTP_RESPONSE_CANCELED)) {
+          Log.d("FaceTecSDKSampleApp", "utils.handleErrorGettingServerSessionToken()");
+        }
+      }
+
+      @Override
+      public void onResponse(Call call, okhttp3.Response response) throws IOException {
+        String responseString = response.body().string();
+        response.body().close();
+        try {
+          JSONObject responseJSON = new JSONObject(responseString);
+          if(responseJSON.has("sessionToken")) {
+            sessionTokenCallback.onResponse(responseJSON.getString("sessionToken"));
+          }
+          else {
+            Log.d("FaceTecSDKSampleApp", "utils.handleErrorGettingServerSessionToken();");
+          }
+        }
+        catch(JSONException e) {
+          e.printStackTrace();
+          Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to parse JSON result.");
+        }
+      }
+    });
   }
 
   /*

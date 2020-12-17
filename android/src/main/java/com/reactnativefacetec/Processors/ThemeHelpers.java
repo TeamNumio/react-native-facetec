@@ -3,11 +3,10 @@ package com.reactnativefacetec.Processors;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-
-import com.reactnativefacetec.R;
 import com.facetec.sdk.FaceTecCancelButtonCustomization;
 import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.FaceTecSDK;
+import com.reactnativefacetec.R;
 
 public class ThemeHelpers {
 
