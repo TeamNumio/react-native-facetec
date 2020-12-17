@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 
-import com.reactnativefacetec.SampleAppActivity;
+// import com.reactnativefacetec.SampleAppActivity;
 import com.facetec.sdk.*;
 
 // This is an example self-contained class to perform Authentication with the FaceTec SDK.
@@ -25,10 +25,10 @@ import com.facetec.sdk.*;
 // Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class AuthenticateProcessor extends Processor implements FaceTecFaceScanProcessor {
     private boolean isSuccess = false;
-    private SampleAppActivity sampleAppActivity;
+//    private SampleAppActivity sampleAppActivity;
 
     public AuthenticateProcessor(String sessionToken, Context context) {
-        this.sampleAppActivity = (SampleAppActivity) context;
+//        this.sampleAppActivity = (SampleAppActivity) context;
 
         //
         // Part 1:  Starting the FaceTec Session
@@ -49,7 +49,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
         // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
         // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
         //
-        sampleAppActivity.setLatestSessionResult(sessionResult);
+//        sampleAppActivity.setLatestSessionResult(sessionResult);
 
         //
         // Part 3:  Handles early exit scenarios where there is no FaceScan to handle -- i.e. User Cancellation, Timeouts, etc.
@@ -68,7 +68,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
             parameters.put("faceScan", sessionResult.getFaceScanBase64());
             parameters.put("auditTrailImage", sessionResult.getAuditTrailCompressedBase64()[0]);
             parameters.put("lowQualityAuditTrailImage", sessionResult.getLowQualityAuditTrailCompressedBase64()[0]);
-            parameters.put("externalDatabaseRefID", sampleAppActivity.getLatestExternalDatabaseRefID());
+//            parameters.put("externalDatabaseRefID", getCurrentActivity().getLatestExternalDatabaseRefID());
         }
         catch(JSONException e) {
             e.printStackTrace();
@@ -111,13 +111,6 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
                 response.body().close();
                 try {
                     JSONObject responseJSON = new JSONObject(responseString);
-
-                    //
-                    // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
-                    // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
-                    //
-                    sampleAppActivity.setLatestServerResult(responseJSON);
-
                     boolean didSucceed = responseJSON.getBoolean("success");
 
                     if (didSucceed == true) {
