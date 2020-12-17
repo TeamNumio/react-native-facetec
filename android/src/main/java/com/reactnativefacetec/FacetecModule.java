@@ -24,7 +24,7 @@ import com.reactnativefacetec.Processors.EnrollmentProcessor;
 import com.reactnativefacetec.Processors.LivenessCheckProcessor;
 import com.reactnativefacetec.Processors.Processor;
 import com.reactnativefacetec.Processors.ThemeHelpers;
-import com.reactnativefacetec.Processors.ZoomGlobalState;
+import com.reactnativefacetec.Processors.Config;
 import com.reactnativefacetec.Processors.PhotoIDMatchProcessor;
 
 import java.util.HashMap;
@@ -78,8 +78,8 @@ public class FacetecModule extends ReactContextBaseJavaModule {
 
     ZoomSDK.initialize(
       reactContext,
-      ZoomGlobalState.DeviceLicenseKeyIdentifier,
-      ZoomGlobalState.PublicFaceMapEncryptionKey,
+      Config.DeviceLicenseKeyIdentifier,
+      Config.PublicFaceMapEncryptionKey,
       new ZoomSDK.InitializeCallback() {
         @Override
         public void onCompletion(final boolean successful) {
