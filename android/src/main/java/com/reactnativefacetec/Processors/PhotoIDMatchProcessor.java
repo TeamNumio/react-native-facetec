@@ -36,7 +36,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
   String id;
   // private SampleAppActivity sampleAppActivity;
 
-  public PhotoIDMatchProcessor(String id, String sessionToken, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
+  public PhotoIDMatchProcessor(String id, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
     this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
     this.sessionTokenErrorCallback = sessionTokenErrorCallback;
     this.id = id;
