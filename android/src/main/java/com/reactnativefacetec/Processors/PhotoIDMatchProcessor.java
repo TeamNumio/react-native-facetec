@@ -50,7 +50,18 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     // - FaceTecFaceScanProcessor:  A class that implements FaceTecFaceScanProcessor, which handles the FaceScan when the User completes a Session.  In this example, "self" implements the class.
     // - sessionToken:  A valid Session Token you just created by calling your API to get a Session Token from the Server SDK.
     //
-    FaceTecSessionActivity.createAndLaunchSession(context, PhotoIDMatchProcessor.this, PhotoIDMatchProcessor.this, sessionToken);
+    NetworkingHelpers.getSessionToken(new NetworkingHelpers.SessionTokenCallback() {
+      @Override
+      public void onResponse(String sessionToken) {
+        // Launch the ZoOm Session.
+        FaceTecSessionActivity.createAndLaunchSession(context, PhotoIDMatchProcessor.this, PhotoIDMatchProcessor.this, sessionToken);
+      }
+
+      @Override
+      public void onError() {
+        sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
+      }
+    });
   }
 
   //

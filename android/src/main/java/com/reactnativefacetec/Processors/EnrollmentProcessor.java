@@ -33,8 +33,9 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
 
 //    private SampleAppActivity sampleAppActivity;
 
-  public EnrollmentProcessor(String id, String sessionToken, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
+  public EnrollmentProcessor(String id, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
     this.id = id;
+    this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
 
 //        this.sampleAppActivity = (SampleAppActivity) context;
 
@@ -46,7 +47,17 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
     // - FaceTecFaceScanProcessor:  A class that implements FaceTecFaceScanProcessor, which handles the FaceScan when the User completes a Session.  In this example, "self" implements the class.
     // - sessionToken:  A valid Session Token you just created by calling your API to get a Session Token from the Server SDK.
     //
-    FaceTecSessionActivity.createAndLaunchSession(context, EnrollmentProcessor.this, sessionToken);
+    NetworkingHelpers.getSessionToken(new NetworkingHelpers.SessionTokenCallback() {
+      @Override
+      public void onResponse(String sessionToken) {
+        FaceTecSessionActivity.createAndLaunchSession(context, EnrollmentProcessor.this, sessionToken);
+      }
+
+      @Override
+      public void onError() {
+        sessionTokenErrorCallback.onError("EnrollmentProcessor");
+      }
+    });
   }
 
   //

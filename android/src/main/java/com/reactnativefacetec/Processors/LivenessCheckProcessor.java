@@ -31,7 +31,9 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
   private boolean isSuccess = false;
   // private SampleAppActivity sampleAppActivity;
 
-  public LivenessCheckProcessor(String sessionToken, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
+  public LivenessCheckProcessor(Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
+    this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
+
     // this.sampleAppActivity = (SampleAppActivity) context;
 
     //
@@ -42,7 +44,18 @@ public class LivenessCheckProcessor extends Processor implements FaceTecFaceScan
     // - FaceTecFaceScanProcessor:  A class that implements FaceTecFaceScanProcessor, which handles the FaceScan when the User completes a Session.  In this example, "self" implements the class.
     // - sessionToken:  A valid Session Token you just created by calling your API to get a Session Token from the Server SDK.
     //
-    FaceTecSessionActivity.createAndLaunchSession(context, LivenessCheckProcessor.this, sessionToken);
+    NetworkingHelpers.getSessionToken(new NetworkingHelpers.SessionTokenCallback() {
+      @Override
+      public void onResponse(String sessionToken) {
+        // Launch the ZoOm Session.
+        FaceTecSessionActivity.createAndLaunchSession(context, LivenessCheckProcessor.this, sessionToken);
+      }
+
+      @Override
+      public void onError() {
+        sessionTokenErrorCallback.onError("LivenessCheckProcessor");
+      }
+    });
   }
 
   //

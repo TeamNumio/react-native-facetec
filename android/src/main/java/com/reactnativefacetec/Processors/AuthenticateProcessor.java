@@ -34,7 +34,7 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
   String id;
 //    private SampleAppActivity sampleAppActivity;
 
-  public AuthenticateProcessor(String id, String sessionToken, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
+  public AuthenticateProcessor(String id, Context context, final SessionTokenErrorCallback sessionTokenErrorCallback, SessionTokenSuccessCallback sessionTokenSuccessCallback) {
     this.sessionTokenSuccessCallback = sessionTokenSuccessCallback;
     this.id = id;
     //        this.sampleAppActivity = (SampleAppActivity) context;
@@ -59,7 +59,6 @@ public class AuthenticateProcessor extends Processor implements FaceTecFaceScanP
         sessionTokenErrorCallback.onError("AuthenticateProcessor");
       }
     });
-    FaceTecSessionActivity.createAndLaunchSession(context, AuthenticateProcessor.this, sessionToken);
   }
 
   //
