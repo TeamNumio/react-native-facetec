@@ -1,5 +1,6 @@
 package com.reactnativefacetec.Processors;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -9,6 +10,10 @@ import com.facetec.sdk.FaceTecSDK;
 import com.reactnativefacetec.R;
 
 public class ThemeHelpers {
+  Context context;
+  public ThemeHelpers(Context context) {
+    this.context = context;
+  }
 
   public static void setAppTheme(String theme) {
     Config.currentCustomization = getCustomizationForTheme(theme);
