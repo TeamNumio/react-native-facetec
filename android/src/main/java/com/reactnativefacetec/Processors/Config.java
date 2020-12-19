@@ -17,7 +17,7 @@ public class Config {
   // REQUIRED
   // Available at https://dev.facetec.com/#/account
   // NOTE: This field is auto-populated by the FaceTec SDK Configuration Wizard.
-  public static String DeviceKeyIdentifier = "dTQ1jhLOgQceDXaVWUA5oButAKbHcSou";
+  public static String DeviceKeyIdentifier = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
   // -------------------------------------
   // REQUIRED
@@ -25,7 +25,7 @@ public class Config {
   // In Production, you likely will handle network requests elsewhere and without the use of this variable.
   // See https://dev.facetec.com/#/security-best-practices?link=facetec-server-rest-endpoint-security for more information.
   // NOTE: This field is auto-populated by the FaceTec SDK Configuration Wizard.
-  public static String BaseURL = "https://scan.numio.one/";
+  public static String BaseURL = "https://api.facetec.com/api/v3/biometrics";
 
   // -------------------------------------
   // REQUIRED
@@ -41,7 +41,22 @@ public class Config {
       "GJD4GIVvR+j12gXAaftj3ahfYxioBH7F7HQxzmWkwDyn3bqU54eaiB7f0ftsPpWM\n" +
       "ceUaqkL2DZUvgN0efEJjnWy5y1/Gkq5GGWCROI9XG/SwXJ30BbVUehTbVcD70+ZF\n" +
       "8QIDAQAB\n" +
-      "-----END PUBLIC KEY-----";
+      "-----END PUBLIC KEY-----"
+    ;
+
+
+  // -------------------------------------
+  // REQUIRED IF: You have had a Production Key generated for you.
+  // Production Keys are generated for your account once all steps for Going Production have been completed.
+  // More information on Going Production can be found at https://dev.facetec.com/#/going-production-overview.
+  //
+  // NOTE:  DO NOT hard code this into your actual App. This variable is coded into the App for demonstration purposes only.
+  // Your App MUST serve down the key data via your own API. This allows you to change/update keys without making a client-side change.
+  // Please see https://dev.facetec.com/#/licensing?link=integrating-production-licenses for more information.
+  static String ProductionKeyText =
+    "appId      = \"XXXXXXXXXXXXXXXXXXXXXX\"\n" +
+      "expiryDate = 2021-01-10\n" +
+      "key        = 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\n";
 
 
   // -------------------------------------
