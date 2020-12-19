@@ -17,7 +17,8 @@
     "!lib/typescript/example",
     "!**/__tests__",
     "!**/__fixtures__",
-    "!**/__mocks__"
+    "!**/__mocks__",
+    "!**/*.secret"
   ],
   "scripts": {
     "test": "jest",
@@ -38,8 +39,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TeamNumio/react-native-zksync.git",
-    "baseUrl": "https://github.com/TeamNumio/react-native-zksync"
+    "url": "git+https://github.com/TeamNumio/react-native-facetec.git",
+    "baseUrl": "https://github.com/TeamNumio/react-native-facetec"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/TeamNumio"
