@@ -14,7 +14,7 @@ import {
   authenticateUser,
   livenessCheck,
   CheckId,
-} from 'react-native-facetec';
+} from '@teamnumio/react-native-facetec';
 
 export default class App extends React.Component {
 

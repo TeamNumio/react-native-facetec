@@ -26,12 +26,14 @@ import com.facetec.sdk.*;
 // Android Note 1:  Some commented "Parts" below are out of order so that they can match iOS and Browser source for this same file on those platforms.
 // Android Note 2:  Android does not have a onFaceTecSDKCompletelyDone function that you must implement like "Part 10" of iOS and Android Samples.  Instead, onActivityResult is used as the place in code you get control back from the FaceTec SDK.
 public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanProcessor, FaceTecIDScanProcessor {
-  FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
-  FaceTecSessionResult latestFaceTecSessionResult;
-  FaceTecIDScanResultCallback idScanResultCallback;
-  FaceTecIDScanResult latestFaceTecIDScanResult;
   SessionTokenSuccessCallback sessionTokenSuccessCallback;
+  FaceTecFaceScanResultCallback FaceTecFaceScanResultCallback;
+
   SessionTokenErrorCallback sessionTokenErrorCallback;
+  FaceTecIDScanResultCallback idScanResultCallback;
+
+  FaceTecSessionResult latestFaceTecSessionResult;
+  FaceTecIDScanResult latestFaceTecIDScanResult;
   private boolean isSuccess = false;
   String id;
   // private SampleAppActivity sampleAppActivity;
