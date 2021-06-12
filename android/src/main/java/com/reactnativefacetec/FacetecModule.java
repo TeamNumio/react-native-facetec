@@ -1,11 +1,6 @@
 package com.reactnativefacetec;
 
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -17,30 +12,31 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facetec.sdk.FaceTecSDK;
-import com.reactnativefacetec.ZoomProcessors.AuthenticateProcessor;
-import com.reactnativefacetec.ZoomProcessors.EnrollmentProcessor;
-import com.reactnativefacetec.ZoomProcessors.LivenessCheckProcessor;
-import com.reactnativefacetec.ZoomProcessors.NetworkingHelpers;
-import com.reactnativefacetec.ZoomProcessors.PhotoIDMatchProcessor;
-import com.reactnativefacetec.ZoomProcessors.Processor;
-import com.reactnativefacetec.ZoomProcessors.ThemeHelpers;
-import com.reactnativefacetec.ZoomProcessors.ZoomGlobalState;
+import com.reactnativefacetec.Processors.AuthenticateProcessor;
+import com.reactnativefacetec.Processors.EnrollmentProcessor;
+import com.reactnativefacetec.Processors.LivenessCheckProcessor;
+import com.reactnativefacetec.Processors.NetworkingHelpers;
+import com.reactnativefacetec.Processors.PhotoIDMatchProcessor;
+import com.reactnativefacetec.Processors.Processor;
+import com.reactnativefacetec.Processors.ThemeHelpers;
+import com.reactnativefacetec.Processors.Config;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Call;
 
 public class FacetecModule extends ReactContextBaseJavaModule {
-  public static final String REACT_CLASS = "Facetec";
+
+  public static final String REACT_CLASS = "FaceTec";
+
   private static ReactApplicationContext reactContext = null;
   public Processor latestProcessor;
-  String sesstionToken;
+  String sessionToken;
 
   Callback onSuccess;
   Callback onFail;
@@ -84,9 +80,9 @@ public class FacetecModule extends ReactContextBaseJavaModule {
 
     FaceTecSDK.initializeInProductionMode(
       reactContext,
-      ZoomGlobalState.ProductionKeyText,
-      ZoomGlobalState.DeviceLicenseKeyIdentifier,
-      ZoomGlobalState.PublicFaceMapEncryptionKey, new FaceTecSDK.InitializeCallback() {
+      Config.ProductionKeyText,
+      Config.DeviceKeyIdentifier,
+      Config.PublicFaceScanEncryptionKey, new FaceTecSDK.InitializeCallback() {
         @Override
         public void onCompletion(boolean b) {
           WritableMap params = Arguments.createMap();
@@ -111,8 +107,8 @@ public class FacetecModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void Enroll(String id, Callback onSuccess, Callback onFail) {
     okhttp3.Request request = new okhttp3.Request.Builder()
-      .header("X-Device-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-      .url(ZoomGlobalState.ZoomServerBaseURL + "/session-token")
+      .header("X-Device-Key", Config.DeviceKeyIdentifier)
+      .url(Config.BaseURL + "/session-token")
       .get()
       .build();
 
@@ -134,7 +130,7 @@ public class FacetecModule extends ReactContextBaseJavaModule {
         try {
           JSONObject responseJSON = new JSONObject(responseString);
           if(responseJSON.has("sessionToken")) {
-            sesstionToken = responseJSON.getString("sessionToken");
+            sessionToken = responseJSON.getString("sessionToken");
             latestProcessor = new EnrollmentProcessor(id, responseJSON.getString("sessionToken"), getCurrentActivity(), sessionTokenErrorCallback, sessionTokenSuccessCallback);
           }
           else {
@@ -158,8 +154,8 @@ public class FacetecModule extends ReactContextBaseJavaModule {
     this.onFail = onFail;
 
     okhttp3.Request request = new okhttp3.Request.Builder()
-            .header("X-Device-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-            .url(ZoomGlobalState.ZoomServerBaseURL + "/session-token")
+            .header("X-Device-Key", Config.DeviceKeyIdentifier)
+            .url(Config.BaseURL + "/session-token")
             .get()
             .build();
 
@@ -181,8 +177,8 @@ public class FacetecModule extends ReactContextBaseJavaModule {
         try {
           JSONObject responseJSON = new JSONObject(responseString);
           if(responseJSON.has("sessionToken")) {
-            sesstionToken = responseJSON.getString("sessionToken");
-            latestProcessor  = new AuthenticateProcessor( sesstionToken, id, getCurrentActivity(), sessionTokenErrorCallback, sessionTokenSuccessCallback);
+            sessionToken = responseJSON.getString("sessionToken");
+            latestProcessor  = new AuthenticateProcessor( sessionToken, id, getCurrentActivity(), sessionTokenErrorCallback, sessionTokenSuccessCallback);
           }
           else {
             onFail.invoke("sessionToken invalid");
@@ -201,7 +197,7 @@ public class FacetecModule extends ReactContextBaseJavaModule {
   public void LivenessCheck(Callback onSuccess, Callback onFail) {
     this.onSuccess = onSuccess;
     this.onFail = onFail;
-    latestProcessor = new LivenessCheckProcessor(sesstionToken,getCurrentActivity());
+    latestProcessor = new LivenessCheckProcessor(sessionToken,getCurrentActivity());
   }
 
   @ReactMethod
@@ -209,8 +205,8 @@ public class FacetecModule extends ReactContextBaseJavaModule {
     this.onSuccess = onSuccess;
     this.onFail = onFail;
     okhttp3.Request request = new okhttp3.Request.Builder()
-            .header("X-Device-Key", ZoomGlobalState.DeviceLicenseKeyIdentifier)
-            .url(ZoomGlobalState.ZoomServerBaseURL + "/session-token")
+            .header("X-Device-Key", Config.DeviceKeyIdentifier)
+            .url(Config.BaseURL + "/session-token")
             .get()
             .build();
 
@@ -232,8 +228,8 @@ public class FacetecModule extends ReactContextBaseJavaModule {
         try {
           JSONObject responseJSON = new JSONObject(responseString);
           if(responseJSON.has("sessionToken")) {
-            sesstionToken = responseJSON.getString("sessionToken");
-            latestProcessor = new PhotoIDMatchProcessor(id, sesstionToken,  getCurrentActivity(), sessionTokenErrorCallback, sessionTokenSuccessCallback);
+            sessionToken = responseJSON.getString("sessionToken");
+            latestProcessor = new PhotoIDMatchProcessor(id, sessionToken,  getCurrentActivity(), sessionTokenErrorCallback, sessionTokenSuccessCallback);
           }
           else {
             onFail.invoke("sessionToken invalid");
