@@ -1,4 +1,12 @@
 <resources>
-<!--  <string name="zoom_instructions_header_ready" >RECOVER YOUR NUMIO ACCOUNT</string>-->
+  <!--  <string name="zoom_instructions_header_ready" >RECOVER YOUR NUMIO ACCOUNT</string>-->
   <string name="zoom_instructions_header_ready" >GET READY FOR YOUR 3D FACE SCAN</string>
+
+  <string name="FaceTec_instructions_header_ready_1">3D Face Scan</string>
+  <string name="FaceTec_instructions_header_ready_2"> </string>
+
+  <string name="FaceTec_instructions_message_ready_1">Please Frame Your Face in the Small Oval,</string>
+  <string name="FaceTec_instructions_message_ready_2">And then the Large Oval</string>
+
+  <string name="FaceTec_action_im_ready">START</string>
 </resources>
