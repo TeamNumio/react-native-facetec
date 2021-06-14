@@ -20,11 +20,6 @@ public class FacetecPackage implements ReactPackage {
       new FacetecModule(reactContext));
   }
 
-  @Override
-  public List<Class<? extends JavaScriptModule>> createJSModules() {
-    return Collections.emptyList();
-  }
-
   @NonNull
   @Override
   public List<ViewManager> createViewManagers(@NonNull ReactApplicationContext reactContext) {

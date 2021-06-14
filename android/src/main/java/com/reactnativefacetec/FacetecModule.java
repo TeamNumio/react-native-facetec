@@ -32,7 +32,7 @@ import okhttp3.Call;
 
 public class FacetecModule extends ReactContextBaseJavaModule {
 
-  public static final String REACT_CLASS = "FaceTec";
+  public static final String REACT_CLASS = "Facetec";
 
   private static ReactApplicationContext reactContext = null;
   public Processor latestProcessor;
@@ -247,11 +247,11 @@ public class FacetecModule extends ReactContextBaseJavaModule {
   Processor.SessionTokenErrorCallback sessionTokenErrorCallback = new Processor.SessionTokenErrorCallback() {
     @Override
     public void onError(String msg) {
-//      try{
-//        onFail.invoke(msg);
-//      }catch (Exception e){
-//        e.printStackTrace();
-//      }
+      try{
+        onFail.invoke(msg);
+      }catch (Exception e){
+        e.printStackTrace();
+      }
     }
   };
 

@@ -127,8 +127,8 @@ dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-//  implementation files('facetec-sdk-9.2.2.aar')
+  implementation files('facetec-sdk-9.2.2.aar')
   implementation 'com.squareup.okhttp3:okhttp:3.10.0'
   implementation 'com.squareup.okio:okio:1.15.0'
-  implementation project(":facetec-sdk-9.2.2")
+//  implementation project(":facetec-sdk-9.2.2")
 }

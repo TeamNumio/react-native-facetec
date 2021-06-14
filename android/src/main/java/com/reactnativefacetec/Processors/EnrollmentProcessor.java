@@ -146,7 +146,6 @@ public class EnrollmentProcessor extends Processor implements FaceTecFaceScanPro
               sessionTokenSuccessCallback.onSuccess(responseJSON.toString());
               e.printStackTrace();
             }
-            faceScanResultCallback.succeed();
           }
           else {
             // CASE:  UNEXPECTED response from API.  Our Sample Code keys of a success boolean on the root of the JSON object --> You define your own API contracts with yourself and may choose to do something different here based on the error.
