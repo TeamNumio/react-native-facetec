@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.facetec.sdk.FaceTecCustomization;
 import com.facetec.sdk.FaceTecFaceScanProcessor;
@@ -82,9 +83,11 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     if(sessionResult.getStatus() != FaceTecSessionStatus.SESSION_COMPLETED_SUCCESSFULLY) {
       NetworkingHelpers.cancelPendingRequests();
       faceScanResultCallback.cancel();
-      sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
       return;
     }
+
+    // IMPORTANT:  FaceTecSDK.FaceTecSessionStatus.SessionCompletedSuccessfully DOES NOT mean the Liveness Check was Successful.
+    // It simply means the User completed the Session and a 3D FaceScan was created.  You still need to perform the Liveness Check on your Servers.
 
     //
     // Part 4:  Get essential data off the FaceTecSessionResult
@@ -94,11 +97,9 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
       parameters.put("faceScan", sessionResult.getFaceScanBase64());
       parameters.put("auditTrailImage", sessionResult.getAuditTrailCompressedBase64()[0]);
       parameters.put("lowQualityAuditTrailImage", sessionResult.getLowQualityAuditTrailCompressedBase64()[0]);
-      parameters.put("externalDatabaseRefID", id);
     }
     catch(JSONException e) {
       e.printStackTrace();
-      sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
       Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to create JSON payload for upload.");
     }
 
@@ -106,7 +107,7 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     // Part 5:  Make the Networking Call to Your Servers.  Below is just example code, you are free to customize based on how your own API works.
     //
     okhttp3.Request request = new okhttp3.Request.Builder()
-      .url(Config.BaseURL  + "/enrollment-3d")
+      .url(Config.BaseURL + "/liveness-3d")
       .header("Content-Type", "application/json")
       .header("X-Device-Key", Config.DeviceKeyIdentifier)
       .header("User-Agent", FaceTecSDK.createFaceTecAPIUserAgentString(sessionResult.getSessionId()))
@@ -130,10 +131,13 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     NetworkingHelpers.getApiClient().newCall(request).enqueue(new Callback() {
       @Override
       public void onResponse(@NonNull Call call, @NonNull okhttp3.Response response) throws IOException {
+
         //
-        // Part 6:  In our Sample, we evaluate a boolean response and treat true as success, false as "User Needs to Retry",
-        // and handle all other non-nominal responses by cancelling out.  You may have different paradigms in your own API and are free to customize based on these.
+        // Part 6:  In our Sample, we evaluate a boolean response and treat true as was successfully processed and should proceed to next step,
+        // and handle all other responses by cancelling out.
+        // You may have different paradigms in your own API and are free to customize based on these.
         //
+
         String responseString = response.body().string();
         response.body().close();
         try {
@@ -143,24 +147,21 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
 
           // In v9.2.0+, we key off a new property called wasProcessed to determine if we successfully processed the Session result on the Server.
           // Device SDK UI flow is now driven by the proceedToNextStep function, which should receive the scanResultBlob from the Server SDK response.
-
-          String message = responseJSON.getString("errorMessage");
-
-          if (wasProcessed) {
-            // CASE:  Success!  The Enrollment was performed and the User successfully enrolled.
+          if(wasProcessed) {
 
             // Demonstrates dynamically setting the Success Screen Message.
             FaceTecCustomization.overrideResultScreenSuccessMessage = "Liveness\nConfirmed";
 
             // In v9.2.0+, simply pass in scanResultBlob to the proceedToNextStep function to advance the User flow.
             // scanResultBlob is a proprietary, encrypted blob that controls the logic for what happens next for the User.
+
+            _isSuccess = true;
             faceScanWasSuccessful = faceScanResultCallback.proceedToNextStep(scanResultBlob);
-            sessionTokenSuccessCallback.onSuccess("PhotoIDMatchProcessor");
+//            sessionTokenSuccessCallback.onSuccess("PhotoIDMatchProcessor");
           }
           else {
-            // CASE:  UNEXPECTED response from API.  Our Sample Code keys of a success boolean on the root of the JSON object --> You define your own API contracts with yourself and may choose to do something different here based on the error.
+            // CASE:  UNEXPECTED response from API.  Our Sample Code keys off a wasProcessed boolean on the root of the JSON object --> You define your own API contracts with yourself and may choose to do something different here based on the error.
             faceScanResultCallback.cancel();
-            sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
           }
         }
         catch(JSONException e) {
@@ -168,16 +169,14 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           e.printStackTrace();
           Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to parse JSON result.");
           faceScanResultCallback.cancel();
-          sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
         }
       }
 
       @Override
-      public void onFailure(Call call, IOException e) {
+      public void onFailure(@NonNull Call call, @Nullable IOException e) {
         // CASE:  Network Request itself is erroring --> You define your own API contracts with yourself and may choose to do something different here based on the error.
         Log.d("FaceTecSDKSampleApp", "Exception raised while attempting HTTPS call.");
         faceScanResultCallback.cancel();
-        sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
       }
     });
 
