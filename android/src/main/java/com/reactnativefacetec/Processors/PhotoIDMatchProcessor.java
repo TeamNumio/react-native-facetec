@@ -41,6 +41,8 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
   private boolean _isSuccess = false;
   private boolean faceScanWasSuccessful = false;
 
+  private boolean successCallBackCalled = false;
+
   SessionTokenSuccessCallback sessionTokenSuccessCallback;
   SessionTokenErrorCallback sessionTokenErrorCallback;
   String id;
@@ -207,7 +209,6 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     if(idScanResult.getStatus() != FaceTecIDScanStatus.SUCCESS) {
       NetworkingHelpers.cancelPendingRequests();
       idScanResultCallback.cancel();
-      sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
       return;
     }
 
@@ -240,7 +241,6 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
     }
     catch(JSONException e) {
       e.printStackTrace();
-      sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
       Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to create JSON payload for upload.");
     }
 
@@ -283,7 +283,6 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
 
           boolean wasProcessed = responseJSON.getBoolean("wasProcessed");
           String scanResultBlob = responseJSON.getString("scanResultBlob");
-
           //
           // DEVELOPER NOTE:  These properties are for demonstration purposes only so the Sample App can get information about what is happening in the processor.
           // In the code in your own App, you can pass around signals, flags, intermediates, and results however you would like.
@@ -316,20 +315,28 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
             //   3.  User succeeded in scanning the Front Side of the ID, there is a Back Side, and the User is sent to the Auto-Capture UI for the Back Side of their ID.
             //   4.  User succeeded in scanning the Back Side of the ID, and the User is now sent to the User OCR Confirmation UI.
             //   5.  The entire process is complete.  This occurs after sending up the final IDScan that contains the User OCR Data.
-            _isSuccess = idScanResultCallback.proceedToNextStep(scanResultBlob);
+
 
             JSONObject obj = new JSONObject();
             try {
-              obj.put("responseJSON", responseJSON.getJSONObject("data").toString());
-              obj.put("FrontImagesCompressedBase64", frontImagesCompressedBase64.get(0));
-              obj.put("BackImagesCompressedBase64", backImagesCompressedBase64.get(0));
-              sessionTokenSuccessCallback.onSuccess(obj.toString());
+              obj.put("responseJSON", responseJSON.toString());
+
+              if(frontImagesCompressedBase64.size() > 0) {
+                obj.put("FrontImagesCompressedBase64", frontImagesCompressedBase64.get(0));
+              }
+              if(backImagesCompressedBase64.size() > 0) {
+                obj.put("BackImagesCompressedBase64", backImagesCompressedBase64.get(0));
+              }
             } catch (Exception e) {
               e.printStackTrace();
-              obj.put("responseJSON", responseJSON.getJSONObject("data").toString());
-              sessionTokenSuccessCallback.onSuccess(obj.toString());
             }
 
+            if (!successCallBackCalled) {
+              sessionTokenSuccessCallback.onSuccess(obj.toString());
+              successCallBackCalled = true;
+            }
+
+            _isSuccess = idScanResultCallback.proceedToNextStep(scanResultBlob);
           }
           else {
             // CASE:  UNEXPECTED response from API.  Our Sample Code keys of a success boolean on the root of the JSON object --> You define your own API contracts with yourself and may choose to do something different here based on the error.
@@ -342,7 +349,6 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
           e.printStackTrace();
           Log.d("FaceTecSDKSampleApp", "Exception raised while attempting to parse JSON result.");
           idScanResultCallback.cancel();
-          sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
         }
       }
 
@@ -351,7 +357,6 @@ public class PhotoIDMatchProcessor extends Processor implements FaceTecFaceScanP
         // CASE:  Network Request itself is erroring --> You define your own API contracts with yourself and may choose to do something different here based on the error.
         Log.d("FaceTecSDKSampleApp", "Exception raised while attempting HTTPS call.");
         idScanResultCallback.cancel();
-        sessionTokenErrorCallback.onError("PhotoIDMatchProcessor");
       }
     });
 
